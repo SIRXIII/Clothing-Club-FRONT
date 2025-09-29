@@ -1,0 +1,48 @@
+const productsData = [
+  {
+    id: 1,
+    productName: "Beach Hat",
+    image: "https://via.placeholder.com/80x80.png?text=Hat",
+    grade: "A", 
+    status: "Available", 
+    prepBuffer: "2 days",
+    rating: 4.5,
+    value: 120,
+    price: 499,
+  },
+  {
+    id: 2,
+    productName: "Leather Tote",
+    image: "https://via.placeholder.com/80x80.png?text=Bag",
+    grade: "B",
+    status: "Maintenance",
+    prepBuffer: "1 day",
+    rating: 4.2,
+    value: 200,
+    price: 89,
+  },
+  {
+    id: 3,
+    productName: "Wallet",
+    image: "https://via.placeholder.com/80x80.png?text=Wallet",
+    grade: "C",
+    status: "Out of Stock",
+    prepBuffer: "3 days",
+    rating: 3.8,
+    value: 80,
+    price: 59,
+  },
+  {
+    id: 4,
+    productName: "Mouse",
+    image: "https://via.placeholder.com/80x80.png?text=Mouse",
+    grade: "A",
+    status: "Available",
+    prepBuffer: "1 day",
+    rating: 4.7,
+    value: 150,
+    price: 39,
+  },
+];
+
+export default productsData;
