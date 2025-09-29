@@ -35,7 +35,7 @@ const BasicInfo = ({ productData, handleChange }) => {
                 options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
                 value={productData.brand}
                 onChange={(val) =>
-                  setProductData((prev) => ({ ...prev, brand: val }))
+                  handleChange({ target: { name: "brand", value: val } })
                 }
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               />
@@ -100,7 +100,7 @@ const BasicInfo = ({ productData, handleChange }) => {
                 ]}
                 value={productData.careMethod}
                 onChange={(val) =>
-                  setProductData((prev) => ({ ...prev, careMethod: val }))
+                handleChange({ target: { name: "careMethod", value: val } })
                 }
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               />

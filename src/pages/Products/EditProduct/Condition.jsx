@@ -16,7 +16,7 @@ const Condition = ({ productData, handleChange }) => {
                 options={["New", "Like New", "Good", "Fair"]}
                 value={productData.coditionGrade}
                 onChange={(val) =>
-                  setProductData((prev) => ({ ...prev, coditionGrade: val }))
+                handleChange({ target: { name: "coditionGrade", value: val } })
                 }
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               />
@@ -41,7 +41,7 @@ const Condition = ({ productData, handleChange }) => {
                 ]}
                 value={productData.status}
                 onChange={(val) =>
-                  setProductData((prev) => ({ ...prev, status: val }))
+                handleChange({ target: { name: "status", value: val } })
                 }
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               />
