@@ -390,7 +390,12 @@ const AddProduct = () => {
               <Dropdown
                 label=" Care Method"
                 dropdownClass="w-full gap-4"
-                options={["Dry Clean Only", "Washing only"]}
+                options={[
+                  "Dry Clean Only",
+                  "Machine Wash",
+                  "Hand Wash",
+                  "Do Not Wash",
+                ]}
                 value={productData.careMethod}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, careMethod: val }))
@@ -457,7 +462,13 @@ const AddProduct = () => {
               <Dropdown
                 label=" Extension Price"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={[
+                  "$10/day",
+                  "$15/day",
+                  "$18/day",
+                  "$20/day",
+                  "$25/day",
+                ]}
                 value={productData.extensionPrice}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, extensionPrice: val }))
@@ -473,7 +484,7 @@ const AddProduct = () => {
               </label>
             </div>
 
-             <div className="relative">
+            <div className="relative">
               <input
                 type="price"
                 id="deposite"
@@ -514,7 +525,7 @@ const AddProduct = () => {
               <Dropdown
                 label=" Replacement Value"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={["$150/day", "$180/day", "$200/day"]}
                 value={productData.replacementValue}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, replacementValue: val }))
@@ -549,13 +560,13 @@ const AddProduct = () => {
               </label>
             </div>
           </div>
-          
+
           <div className="grid  grid-cols-2 w-full gap-6 leading-[150%] tracking-[-3%]">
             <div className="relative">
               <Dropdown
                 label="  Min Rental Period"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={["1 day", "2 days", "4 days"]}
                 value={productData.minRentalPeriod}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, minRentalPeriod: val }))
@@ -640,7 +651,12 @@ const AddProduct = () => {
               <Dropdown
                 label=" Location"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={[
+                  "Barcelona Flagship",
+                  "Madrid Central Store",
+                  "Paris Boutique",
+                  "London Showroom",
+                ]}
                 value={productData.location}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, location: val }))
@@ -660,7 +676,11 @@ const AddProduct = () => {
               <Dropdown
                 label=" SKU"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={[
+                  "SKU-001-ZARA-TSHIRT",
+                  "SKU-002-HM-JEANS",
+                  "SKU-003-GUCCI-BAG",
+                ]}
                 value={productData.sku}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, sku: val }))
@@ -722,7 +742,13 @@ const AddProduct = () => {
             <Dropdown
               label=" Fit Type"
               dropdownClass="w-full gap-4"
-              options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+              options={[
+                "Slim Fit",
+                "Regular Fit",
+                "Relaxed Fit",
+                "Tailored Fit",
+                "Loose Fit",
+              ]}
               value={productData.fitType}
               onChange={(val) =>
                 setProductData((prev) => ({ ...prev, fitType: val }))
@@ -819,7 +845,7 @@ const AddProduct = () => {
               <Dropdown
                 label=" Condition Grade"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={["New", "Like New", "Good", "Fair"]}
                 value={productData.conditionGrade}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, conditionGrade: val }))
@@ -839,7 +865,12 @@ const AddProduct = () => {
               <Dropdown
                 label=" Status"
                 dropdownClass="w-full gap-4"
-                options={["Zara", "H&M", "Gucci", "Prada", "Uniqlo"]}
+                options={[
+                  "Available",
+                  "Rented",
+                  "Under Maintenance",
+                  "Archived",
+                ]}
                 value={productData.status}
                 onChange={(val) =>
                   setProductData((prev) => ({ ...prev, status: val }))

@@ -32,12 +32,12 @@ const EditProduct = () => {
     location: "Barcelona Flagship",
     sku: "SKU-2031",
     barcode: "0025926331",
-    fitType: "0025926331",
-    chest: "0025926331",
-    lengthType: "0025926331",
-    sleeve: "0025926331",
-    coditionGrade: "0025926331",
-    Constatus: "0025926331",
+    fitType: "loose",
+    chest: "88cm",
+    lengthType: "120cm",
+    sleeve: "60cm",
+    coditionGrade: "New",
+    status: "In Circulation",
     note: "0025926331",
   });
 
