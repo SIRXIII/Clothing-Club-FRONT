@@ -5,7 +5,6 @@ import RentalDetails from "./RentalDetails";
 import Location from "./Location";
 import SizeFit from "./SizeFit";
 import Condition from "./Condition";
-import Availability from "./Availability";
 
 const EditProduct = () => {
   const [images, setImages] = useState([proImg, proImg, proImg]);
@@ -167,8 +166,6 @@ const EditProduct = () => {
               <h3 className="fw5 text-[16px] text-[#232323] leading-[150%] tracking-[-3%]">
                 Product Video
               </h3>
-
-              {/* Video Preview */}
               {videoUrl && (
                 <div className="relative rounded-lg overflow-hidden">
                   <video
@@ -194,8 +191,6 @@ const EditProduct = () => {
                 <span className="text-sm text-gray-500">OR</span>
                 <div className="flex-1 h-px bg-[#D9D9D9]" />
               </div>
-
-              {/* URL Input */}
               <div className="relative">
                 <input
                   type="text"
@@ -230,13 +225,6 @@ const EditProduct = () => {
         <Condition productData={productData} handleChange={handleChange} />
 
         {/* <Availability productData={productData} handleChange={handleChange} /> */}
-
-        {/* <DemoItem label="Controlled calendar">
-          <DateCalendar
-            value={calendarValue}
-            onChange={(newValue) => setCalendarValue(newValue)}
-          />
-        </DemoItem> */}
 
         <div className="relative bottom-0 left-0 right-0 bg-[#FFFFFF]  px-6 py-6 flex justify-end gap-3 ">
           <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
