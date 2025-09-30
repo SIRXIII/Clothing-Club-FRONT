@@ -127,7 +127,22 @@ const Refunds = () => {
   );
 
   return (
-    <div className="gap-6 p-2">
+       <div className="flex flex-col gap-6 p-3">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center text-xs gap-1">
+            <p className="text-[#6C6C6C]">Dashboard</p>
+            <span className="text-[#9A9A9A]">/</span>
+            <p className="text-[#F77F00]">Refund</p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl fw6 font-roboto text-[#232323]">
+              Refund
+            </h2>
+            <p className="text-[#232323] text-sm">
+              View and manage all your orders.
+            </p>
+          </div>
+        </div>
       <div className="bg-[#FFFFFF] rounded-lg border-color p-6 mt-4">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
           <div className="relative">
