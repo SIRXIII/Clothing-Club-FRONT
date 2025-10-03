@@ -17,6 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
+  const [oauthLoading, setOauthLoading] = useState(null);
   const { login } = useAuth();
 
 
@@ -27,9 +28,89 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (err) {
-      console.error("Login error login page:", err);
       setError(err.message);
       setFieldErrors(err.errors);
+    }
+  };
+
+  // OAuth handlers
+  const handleGoogleLogin = () => {
+    setOauthLoading('google');
+    setError("");
+    
+    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+    
+    // Option 1: Direct redirect (current approach)
+    window.location.href = `${API_URL}/social/google/redirect`;
+    
+    // Option 2: Popup approach (uncomment if you prefer popup)
+    // const popup = window.open(
+    //   `${API_URL}/social/google/redirect`,
+    //   'google-oauth',
+    //   'width=500,height=600,scrollbars=yes,resizable=yes'
+    // );
+    
+    // const handleMessage = (event) => {
+    //   if (event.origin !== new URL(API_URL).origin) return;
+    //   
+    //   if (event.data.type === 'OAUTH_SUCCESS') {
+    //     localStorage.setItem('auth_token', event.data.token);
+    //     localStorage.setItem('auth_user', JSON.stringify(event.data.user));
+    //     localStorage.setItem('type', event.data.user.type || 'admin');
+    //     window.location.href = '/';
+    //   } else if (event.data.type === 'OAUTH_ERROR') {
+    //     setError(event.data.error);
+    //   }
+    //   
+    //   setOauthLoading(null);
+    //   window.removeEventListener('message', handleMessage);
+    //   popup.close();
+    // };
+    
+    // window.addEventListener('message', handleMessage);
+  };
+
+  const handleAppleLogin = () => {
+    setOauthLoading('apple');
+    setError("");
+    
+    // Direct redirect to backend OAuth endpoint
+    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+    window.location.href = `${API_URL}/social/apple/redirect`;
+  };
+
+  const handleShopifyLogin = async () => {
+    try {
+      setOauthLoading('shopify');
+      setError("");
+      
+      const shopDomain = prompt('Enter your Shopify shop domain (e.g., mystore.myshopify.com):');
+      if (!shopDomain) {
+        setOauthLoading(null);
+        return;
+      }
+      
+      // Validate shop domain format
+      const shopDomainRegex = /^[a-zA-Z0-9-]+\.myshopify\.com$/;
+      if (!shopDomainRegex.test(shopDomain)) {
+        setError('Invalid shop domain format. Please use format: mystore.myshopify.com');
+        setOauthLoading(null);
+        return;
+      }
+      
+      // Use oauthService for consistency
+      const oauthService = (await import('../services/oauthService')).default;
+      
+      // Store shop domain for the service
+      sessionStorage.setItem('shopify_domain', shopDomain);
+      
+      // Direct redirect to backend OAuth endpoint
+      const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+      window.location.href = `${API_URL}/social/shopify/redirect?shop=${encodeURIComponent(shopDomain)}`;
+      
+    } catch (error) {
+      setError(error.message || 'Failed to initiate Shopify login');
+      setOauthLoading(null);
     }
   };
 
@@ -161,9 +242,9 @@ const Login = () => {
                 />
                 <span className="fw5 text-[#6C6C6C]">Remember me</span>
               </label>
-              <a href="/" className="text-[#F77F00] hover:underline fw5">
+              <Link to="/forgot-password" className="text-[#F77F00] hover:underline fw5">
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             <button
@@ -180,28 +261,58 @@ const Login = () => {
           </div>
 
           <div className="space-y-3">
-            <button className="w-full border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50">
-              <img src={google} alt="" />
-              <span className="text-base fw6">Sign in with Google</span>
+            <button 
+              onClick={handleGoogleLogin}
+              disabled={oauthLoading !== null}
+              className="w-full border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {oauthLoading === 'google' ? (
+                <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+              ) : (
+                <img src={google} alt="" />
+              )}
+              <span className="text-base fw6">
+                {oauthLoading === 'google' ? 'Connecting...' : 'Sign in with Google'}
+              </span>
             </button>
 
             <div className="flex space-x-4">
-              <button className="w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50">
-                <img src={apple} alt="" />
-                <span className="text-base fw6">Sign in with Apple</span>
+              <button 
+                onClick={handleAppleLogin}
+                disabled={oauthLoading !== null}
+                className="w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {oauthLoading === 'apple' ? (
+                  <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                ) : (
+                  <img src={apple} alt="" />
+                )}
+                <span className="text-base fw6">
+                  {oauthLoading === 'apple' ? 'Connecting...' : 'Sign in with Apple'}
+                </span>
               </button>
-              <button className="w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50">
-                <img src={shopify} alt="" />
-                <span className="text-base fw6">Sign in with Shopify</span>
+              <button 
+                onClick={handleShopifyLogin}
+                disabled={oauthLoading !== null}
+                className="w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {oauthLoading === 'shopify' ? (
+                  <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                ) : (
+                  <img src={shopify} alt="" />
+                )}
+                <span className="text-base fw6">
+                  {oauthLoading === 'shopify' ? 'Connecting...' : 'Sign in with Shopify'}
+                </span>
               </button>
             </div>
           </div>
 
           <p className="text-center text-base font-inter text-gray-600 mt-6">
-            Don’t have an account?{" "}
+            {/* Don’t have an account?{" "}
             <Link to="/signup" className="text-[#F77F00] fw6 ">
               Sign up
-            </Link>
+            </Link> */}
           </p>
         </div>
       </div>

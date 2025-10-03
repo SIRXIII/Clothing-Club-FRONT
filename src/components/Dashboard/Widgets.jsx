@@ -1,6 +1,6 @@
 import React from "react";
 import { useWidgets } from "../../hooks/useDashboard";
-import widgetData from '../../data/widgetData.js';
+import widgetData1 from '../../data/widgetData.js';
 
 const Widgets = () => {
   const { data: widgetData, isLoading, error } = useWidgets();
@@ -23,7 +23,7 @@ const Widgets = () => {
         ))}
       </div>
       <div className="grid grid-cols-2 w-full gap-6 h-[130px]">
-        {widgetData.map((item) => (
+        {widgetData1.map((item) => (
           <div key={item.id} className="p-6 rounded-lg border-color bg-white">
             <h6 className="text-xl leading-[120%] tracking-[-4%] mb-5 text-gray-500 font-roboto gap-[214px]">
               {item.label}

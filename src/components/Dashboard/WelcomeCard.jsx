@@ -1,11 +1,13 @@
 import React from "react";
 import Image from "../../assets/Images/bg_dash1.jpg";
 import calendar from '../../assets/SVG/calendar.svg'
+import { useAuth } from "../../context/AuthContext";
 
 const WelcomeCard = () => {
   const today = new Date();
   const options = { year: "numeric", month: "short", day: "2-digit" };
   const formattedDate = today.toLocaleDateString("en-US", options);
+  const {user} = useAuth();
   return (
    <div
      className="w-full lg:min-w-[1135px] h-[221px] rounded-lg border border-[#D5D7DA] mx-auto relative"
@@ -36,7 +38,7 @@ const WelcomeCard = () => {
    
           
            <h1 className="text-[32px] fw6 font-roboto mb-1 sm:mb-2 leading-[120%] text-[#FFFFFF] tracking-[-3%]">
-             Welcome Back, Admin!
+             Welcome {user?.name}!👋
            </h1>
    
            {/* Subtitle */}

@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import API from "../../services/api";
 import Rid_image from "../../assets/Images/rid_profile.jpg";
 import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 
 const PersonalInfo = () => {
+  const { setUser } = useAuth();
   const currentUser = JSON.parse(localStorage.getItem("auth_user")) || {};
 
   const [formData, setFormData] = useState({
-    first_name: currentUser.first_name || "",
-    last_name: currentUser.last_name || "",
+    
+    name: currentUser.name || "",
     email: currentUser.email || "",
     phone: currentUser.phone || "",
   });
 
-  const [image, setImage] = useState(null); 
+  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(
     currentUser.profile_photo ?? Rid_image
   );
@@ -21,14 +23,13 @@ const PersonalInfo = () => {
 
   const handleDiscard = () => {
     setFormData({
-      first_name: currentUser.first_name || "",
-      last_name: currentUser.last_name || "",
+      name: currentUser.name || "",
       email: currentUser.email || "",
       phone: currentUser.phone || "",
     });
     setImage(null);
     setPreview(
-      currentUser.profile_photo ??  Rid_image
+      currentUser.profile_photo ?? Rid_image
     );
   };
 
@@ -52,7 +53,7 @@ const PersonalInfo = () => {
       data.append("user_id", currentUser.id);
       Object.keys(formData).forEach((key) => data.append(key, formData[key]));
       if (image) {
-        data.append("profile_photo", image); 
+        data.append("profile_photo", image);
       }
 
       const response = await API.post("/profile/update", data, {
@@ -60,15 +61,30 @@ const PersonalInfo = () => {
       });
 
       localStorage.setItem("auth_user", JSON.stringify(response.data.user));
-     
+      setUser(response.data.user);
+
       toast.success("Profile updated successfully!")
     } catch (err) {
-      console.error(err);
-     
-      toast.error("Failed to update profile")
+
+      // console.log("error", err.response.data.errors);
+
+      // Object.values(err.response.data.errors).forEach(messages => {
+      //   messages.forEach(message => {
+      //     toast.error(message);
+      //   });
+      // });
+
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatPhone = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 10); // allow max 10 digits
+
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
   };
 
   return (
@@ -78,12 +94,14 @@ const PersonalInfo = () => {
           Personal Information
         </h2>
 
-        
+
         <div className="flex gap-4 items-center">
           <img
             src={preview}
             alt="profile"
             className="w-18 h-18 rounded-[10px] object-cover object-center"
+            onError={(e) => { e.currentTarget.src = Rid_image; }}
+
           />
           <div className="flex gap-2">
             <label className="cursor-pointer border border-[#F77F00] bg-[#FEF2E6] rounded-lg p-3 text-xs fw6 text-[#F77F00] hover:bg-[#F77F00] hover:text-[#FFFFFF]">
@@ -110,28 +128,40 @@ const PersonalInfo = () => {
 
         {/* Form Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {["first_name", "last_name", "email", "phone"].map((field) => (
+          {["name", "email", "phone"].map((field) => (
             <div className="relative" key={field}>
               <input
-                type={field === "email" ? "email" : "text"}
+                type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
                 id={field}
                 name={field}
-                value={formData[field]}
-                onChange={handleChange}
+                value={field === "phone" ? formData[field] ?? "" : formData[field] ?? ""}
+                onChange={(e) => {
+                  if (field === "phone") {
+                    const formatted = formatPhone(e.target.value);
+                    e.target.value = formatted;
+                  }
+                  handleChange(e);
+                }}
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] peer focus:outline-none"
-                placeholder=" "
+                placeholder={field === "phone" ? "Phone (e.g. 212-456-7890)" : ""}
+                inputMode={field === "phone" ? "tel" : undefined}
+                pattern={field === "phone" ? "^\\d{3}-\\d{3}-\\d{4}$" : undefined}
+                autoComplete={field === "email" ? "email" : field === "phone" ? "tel" : "name"}
+                maxLength={field === "phone" ? 12 : undefined}
               />
+
               <label
                 htmlFor={field}
                 className="absolute text-sm ms-4 text-[#232323] duration-300 transform -translate-y-4 scale-75 top-2 bg-white px-2 
-                peer-placeholder-shown:top-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-                peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4"
+                            peer-placeholder-shown:top-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                            peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4"
               >
                 {field.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
               </label>
             </div>
           ))}
         </div>
+
 
         {/* Actions */}
         <div className="flex justify-end gap-2">
