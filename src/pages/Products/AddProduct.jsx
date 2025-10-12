@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import Upload from "../../assets/SVG/upload.svg";
 import Video from "../../assets/SVG/video.svg";
+import { FaTimes } from "react-icons/fa";
 
 const Dropdown = ({
   label,
@@ -40,9 +41,8 @@ const Dropdown = ({
       >
         <span className="text-[#121212] text-sm flex-1">{displayValue}</span>
         <FiChevronDown
-          className={`transform transition-transform duration-300 w-5 h-5 ${
-            open ? "rotate-180" : "rotate-0"
-          }`}
+          className={`transform transition-transform duration-300 w-5 h-5 ${open ? "rotate-180" : "rotate-0"
+            }`}
         />
       </div>
       {open && (
@@ -55,9 +55,8 @@ const Dropdown = ({
               key={index}
               onClick={() => handleSelect(opt)}
               className={`block hover:bg-[#F77F00] hover:text-[#FFFFFF] 
-        p-1 rounded cursor-pointer text-[#121212] py-2 px-4 ${
-          multiple && value.includes(opt) ? "bg-[#f6a34b] text-white mb-1" : ""
-        }`}
+        p-1 rounded cursor-pointer text-[#121212] py-2 px-4 ${multiple && value.includes(opt) ? "bg-[#f6a34b] text-white mb-1" : ""
+                }`}
             >
               {opt}
             </span>
@@ -107,11 +106,17 @@ const AddProduct = () => {
     setProductData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // const handleFileChange = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length) {
+  //     setImages((prev) => [...prev, ...files]);
+  //   }
+  // };
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length) {
-      setImages((prev) => [...prev, ...files]);
-    }
+    setImages((prev) => [...prev, ...files]);
+    e.target.value = ""; 
   };
 
   const handleDeleteImage = (index) => {
@@ -123,6 +128,8 @@ const AddProduct = () => {
     console.log("Submitting product:", productData, images, videoUrl);
     // API call goes here
   };
+
+
 
   return (
     <form>
@@ -151,7 +158,7 @@ const AddProduct = () => {
               <h3 className="fw5 leading-[150%] tracking-[-3%] ">
                 Product Image
               </h3>
-              <div
+              {/* <div
                 className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
                 onClick={() => document.getElementById("productImages").click()}
               >
@@ -224,12 +231,77 @@ const AddProduct = () => {
                 <button className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100">
                   +
                 </button>
+              </div> */}
+
+              <div className="w-full">
+                <input
+                  type="file"
+                  id="productImages"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                {images.length === 0 ? (
+                  <div
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
+                    onClick={() => document.getElementById("productImages").click()}
+                  >
+                    <img src={Upload} alt="" className="w-8 h-8 mb-2" />
+                    <p className="text-base fw6 text-[#6C6C6C]">Upload product images</p>
+                    <p className="text-xs text-[#9A9A9A]">Only PNG, JPG allowed.</p>
+                    <p className="text-xs text-[#9A9A9A]">
+                      500x500 pixels are recommended.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="relative w-full">
+                      <img
+                        src={URL.createObjectURL(images[0])}
+                        alt="main product"
+                        className="w-full h-60 object-cover rounded-[10px] border"
+                      />
+                      <button
+                        onClick={() => setImages([])}
+                        className="absolute -top-2 -right-2 flex items-center justify-center w-[24px] h-[24px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                      >
+                        <FaTimes size={12} />
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {images.slice(1).map((img, idx) => (
+                        <div key={idx} className="relative w-24 h-24">
+                          <img
+                            src={URL.createObjectURL(img)}
+                            alt="product"
+                            className="w-full h-full object-cover rounded-[10px] border"
+                          />
+                          <button
+                            onClick={() => setImages(images.filter((_, i) => i !== idx + 1))}
+                            className="absolute -top-2 -right-2 flex items-center justify-center w-[20px] h-[20px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                          >
+                            <FaTimes size={10} />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100"
+                        onClick={() => document.getElementById("productImages").click()}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
+
             </div>
 
             <div className="flex flex-col gap-6">
               <h3 className="font-semibold">Product Video</h3>
-              <div
+              {/* <div
                 className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
                 onClick={() => document.getElementById("productVideo").click()}
               >
@@ -271,7 +343,51 @@ const AddProduct = () => {
                     </p>
                   </div>
                 )}
+              </div> */}
+
+              <div
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer relative"
+                style={{ minHeight: "220px" }}
+                onClick={() => document.getElementById("productVideo").click()}
+              >
+                <input
+                  type="file"
+                  id="productVideo"
+                  accept="video/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setVideoUrl(URL.createObjectURL(e.target.files[0]));
+                    }
+                  }}
+                />
+
+                {videoUrl ? (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <video
+                      src={videoUrl}
+                      controls
+                      className="w-full h-48 object-cover rounded-md border border-gray-300"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-2 right-2 bg-[#F77F00]/80 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setVideoUrl();
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-1 pointer-events-none">
+                    <img src={Video} alt="" className="w-8 h-8 mb-2" />
+                    <p className="text-base fw6 text-[#6C6C6C]">Upload your product video</p>
+                  </div>
+                )}
               </div>
+
 
               <div className="flex items-center gap-2 justify-center">
                 <span className="text-sm text-[#6C6C6C] ">OR</span>
@@ -725,10 +841,7 @@ const AddProduct = () => {
             </div>
             <div className="flex gap-3 pt-11">
               <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
-                Preview
-              </button>{" "}
-              <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
-                Download
+                Auto Generate
               </button>
             </div>
           </div>
