@@ -6,6 +6,9 @@ import Editing from "../../assets/SVG/editing.svg";
 import Rating from "../../assets/SVG/rating.svg";
 import Delete from "../../assets/SVG/delete.svg";
 import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../../components/Breadcrumb";
+import productImg from "../../assets/Images/Pro_img.jpg";
+
 
 const Products = () => {
   const [search, setSearch] = useState("");
@@ -73,11 +76,17 @@ const Products = () => {
   return (
     <div className="flex flex-col gap-6 p-3">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center text-xs gap-1">
+        {/* <div className="flex items-center text-xs gap-1">
           <p className="text-[#6C6C6C]">Dashboard</p>
           <span className="text-[#9A9A9A]">/</span>
           <p className="text-[#F77F00]">Products</p>
-        </div>
+        </div> */}
+         <Breadcrumb
+            items={[
+              { label: "Dashboard", path: "/" },
+              { label: "Products"},
+            ]}
+          />
         <div>
           <h2 className="text-2xl font-roboto fw6 text-[#232323]">Products</h2>
           <p className="text-[#232323] text-sm">
@@ -198,9 +207,10 @@ const Products = () => {
 
                   <td className="px-4 py-3 flex items-center gap-2">
                     <img
-                      src={p.image}
+                      src={p.image || productImg }
                       alt={p.productName}
                       className="w-10 h-10 rounded object-cover"
+                      onError={(e) => { e.currentTarget.src = productImg; }}
                     />
                     <span>{p.productName}</span>
                   </td>

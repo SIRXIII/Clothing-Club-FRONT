@@ -4,6 +4,7 @@ import AssignedOrders from "./AssignedOrders";
 import PendingOrders from "./PendingOrders";
 import Pagination from "../../components/Pagination";
 import { useOrders } from "../../hooks/useOrder";
+import Breadcrumb from "../../components/Breadcrumb";
 
 const Orders = () => {
   const { data: orders = { pending: [], approved: [] }, isLoading, isError } = useOrders();
@@ -84,11 +85,18 @@ const Orders = () => {
     <div className="flex flex-col gap-6 p-3">
     
       <div className="flex flex-col gap-4">
-        <div className="flex items-center text-xs gap-1 fw4 leading-[150%] tracking-[-3%]">
+        {/* <div className="flex items-center text-xs gap-1 fw4 leading-[150%] tracking-[-3%]">
           <p className="text-[#6C6C6C]">Dashboard</p>
           <span className="mx-2 text-[#9A9A9A]">/</span>
           <p className="text-[#F77F00]">Orders</p>
-        </div>
+        </div> */}
+         <Breadcrumb
+            items={[
+              { label: "Dashboard", path: "/" },
+              { label: "Orders", },
+
+            ]}
+          />
         <div className="flex justify-between gap-4">
           <div className="gap-2">
             <h2 className="text-2xl fw6 font-roboto text-[#232323]">Orders</h2>

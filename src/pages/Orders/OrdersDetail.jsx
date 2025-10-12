@@ -4,10 +4,20 @@ import { orderData } from "../../data/OrderData";
 import backward from "../../assets/SVG/backward.svg";
 import { Link, useParams } from "react-router-dom";
 import { getOrderById } from "../../services/orderService";
+import productImg from "../../assets/Images/Pro_img.jpg";
+import DefaultProfile from "../../assets/Images/trv_profile.jpg";
+import ImagePreviewGallery from "../../components/ImagePreviewGallery";
+import Breadcrumb from "../../components/Breadcrumb";
+
+const GEOAPIFY_KEY = import.meta.env.VITE_APP_GEOAPIFY_KEY;
+
+
 const OrdersDetail = () => {
 
   const { id } = useParams();
   const [order, setOrder] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
 
   console.log("first order", order);
 
@@ -46,13 +56,21 @@ const OrdersDetail = () => {
   return (
     <div className="flex flex-col p-2">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center text-xs gap-1 text-[#6C6C6C]">
+        {/* <div className="flex items-center text-xs gap-1 text-[#6C6C6C]">
           <p>Dashboard</p>
           <span className="mx-1 text-[#9A9A9A]">/</span>
           <p>Orders </p>
           <span className="mx-1 text-[#9A9A9A]">/</span>
           <p className="text-[#F77F00]">Assign Order</p>
-        </div>
+        </div> */}
+         <Breadcrumb
+            items={[
+              { label: "Dashboard", path: "/" },
+              { label: "Orders", path: "/orders" },
+
+              { label: "Assign Order" },
+            ]}
+          />
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <div className="flex gap-3 items-center">
@@ -123,9 +141,11 @@ const OrdersDetail = () => {
                     >
                       <div className="flex items-center gap-3">
                         <img
-                          src={item.product_image}
-                          alt={item.product_name}
+                          src={item?.product_image || productImg}
+                          alt={item?.product_name}
                           className="w-12 h-12 rounded-xl object-cover "
+                          onClick={() => setPreviewImage(item?.product_image || productImg)}
+                          onError={(e) => { e.currentTarget.src = productImg; }}
                         />
                         <p className="text-sm fw5">{item.product_name}</p>
                       </div>
@@ -197,13 +217,20 @@ const OrdersDetail = () => {
                 <h2 className="text-lg fw6  text-[#232323]">Customer</h2>
                 <div className="flex items-center gap-2.5">
                   <img
-                    src={order?.traveler?.profile_photo}
+                    src={order?.traveler?.profile_photo || DefaultProfile}
                     alt={order?.traveler?.name}
                     className="w-10 h-10 rounded-xl object-cover"
+                    onClick={() => setPreviewImage(order?.traveler?.profile_photo || DefaultProfile)}
+                    onError={(e) => { e.currentTarget.src = DefaultProfile; }}
                   />
                   <div>
                     <p className="text-sm fw6 text-[#232323]">{order?.traveler.name}</p>
-                    <p className="text-xs fw4 text-[#6C6C6C]">{order?.traveler.email}</p>
+                    <p className="text-xs fw4 mb-1 text-[#6C6C6C]"> <a href={`mailto:${order?.traveler.email}`} className="hover:underline">{order?.traveler.email}</a></p>
+                    <p className="text-xs text-[#6C6C6C]">
+                      <a href={`tel:${order?.traveler.phone}`} className="hover:underline">
+                        {order?.traveler.phone}
+                      </a>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -212,16 +239,47 @@ const OrdersDetail = () => {
                 <h2 className="text-lg fw6  text-[#232323]">Partner</h2>
                 <div className="flex items-center gap-2.5">
                   <img
-                    src={order?.partner.profile_photo}
+                    src={order?.partner.profile_photo || DefaultProfile}
                     alt={order?.partner.name}
                     className="w-10 h-10 rounded-xl object-cover"
+                    onClick={() => setPreviewImage(order?.partner?.profile_photo || DefaultProfile)}
+
+                    onError={(e) => { e.currentTarget.src = DefaultProfile; }}
+
                   />
                   <div>
                     <p className="fw6 text-sm text-[#232323]">{order?.partner.name}</p>
-                    <p className="text-xs text-[#6C6C6C]">{order?.partner.email}</p>
+                    <p className="text-xs mb-1 text-[#6C6C6C]">
+                      <a href={`mailto:${order?.partner.email}`} className="hover:underline">
+                        {order?.partner.email}
+                      </a>
+                    </p>
+                    <p className="text-xs text-[#6C6C6C]">
+                      <a href={`tel:${order?.partner.phone}`} className="hover:underline">
+                        {order?.partner.phone}
+                      </a>
+                    </p>
+
                   </div>
                 </div>
-                <p className="mt-3 text-xs text-[#232323]">{order?.partner.address}</p>
+                <p className="mt-3 text-xs text-[#232323]">
+                  
+                  {/* {order?.partner.address} */}
+
+                   <a
+                href={
+                  order?.partner?.latitude && order?.partner?.longitude
+                    ? `https://www.google.com/maps?q=${order?.partner?.latitude},${order?.partner?.longitude}`
+                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(order?.partner.address)}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {order?.partner.address}
+              </a>
+                  
+                  </p>
               </div>
 
               {order?.rider && (
@@ -229,23 +287,56 @@ const OrdersDetail = () => {
                   <h2 className="text-lg fw6  text-[#232323]">Rider</h2>
                   <div className="flex items-center gap-2.5">
                     <img
-                      src={order?.rider.profile_photo}
+                      src={order?.rider.profile_photo || DefaultProfile}
                       alt={order?.rider.name}
                       className="w-10 h-10 rounded-xl object-cover"
+                      onClick={() => setPreviewImage(order?.rider?.profile_photo || DefaultProfile)}
+
+                      onError={(e) => { e.currentTarget.src = DefaultProfile; }}
+
                     />
                     <div>
                       <p className="fw6 text-sm text-[#232323]">{order?.rider.name}</p>
-                      <p className="text-xs text-[#6C6C6C]">{order?.rider.email}</p>
+
+                      <p className="text-xs fw4 mb-1 text-[#6C6C6C]"> <a href={`mailto:${order?.rider.email}`} className="hover:underline">{order?.rider.email}</a></p>
+
+                      <p className="text-xs text-[#6C6C6C]">
+                        <a href={`tel:${order?.rider.phone}`} className="hover:underline">
+                          {order?.rider.phone}
+                        </a>
+                      </p>
+
                     </div>
                   </div>
-                  <p className="mt-3 text-xs text-[#232323]">{order?.rider.address}</p>
+                  <p className="mt-3 text-xs text-[#232323]">
+                    {/* {order?.rider.address} */}
+
+                     <a
+                href={
+                  order?.rider?.latitude && order?.rider?.longitude
+                    ? `https://www.google.com/maps?q=${order?.rider?.latitude},${order?.rider?.longitude}`
+                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(order?.rider.address)}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {order?.rider.address}
+              </a>
+                  </p>
                 </div>
               )}
               <div className="flex flex-col bg-white p-6 gap-6 rounded-lg shadow-sm">
                 <h2 className="text-lg fw6 text-[#232323]">Contact Person</h2>
                 <p className="fw5 text-sm text-[#232323]">{order?.traveler.name}</p>
-                <p className="text-sm fw4 text-[#232323]">{order?.traveler.email}</p>
-                <p className="text-sm fw4 text-[#6C6C6C] ">{order?.traveler.phone}</p>
+                <p className="text-xs fw4 mb-1 text-[#6C6C6C]"> <a href={`mailto:${order?.traveler.email}`} className="hover:underline">{order?.traveler.email}</a></p>
+                <p className="text-xs text-[#6C6C6C]">
+                  <a href={`tel:${order?.traveler.phone}`} className="hover:underline">
+                    {order?.traveler.phone}
+                  </a>
+                </p>
+
+
               </div>
 
               {shippingAddress ? (
@@ -253,7 +344,19 @@ const OrdersDetail = () => {
                   <h2 className="text-lg fw6 text-[#232323]">Shipping Address</h2>
                   <p className="fw5 text-sm text-[#232323]">{shippingAddress?.name}</p>
                   <p className="text-sm fw4 text-[#232323]">
-                    {shippingAddress?.address}
+                    {/* {shippingAddress?.address} */}
+                     <a
+                href={
+                  shippingAddress.latitude && shippingAddress.longitude
+                    ? `https://www.google.com/maps?q=${shippingAddress.latitude},${shippingAddress.longitude}`
+                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(shippingAddress.address)}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {shippingAddress?.address}
+              </a>
                   </p>
                 </div>
               ) : (
@@ -265,7 +368,18 @@ const OrdersDetail = () => {
                   <h2 className="text-lg fw6 text-[#232323]">Billing Address</h2>
                   <p className="fw5 text-sm text-[#232323]">{billingAddress?.name}</p>
                   <p className="text-sm fw4 text-[#232323]">
-                    {billingAddress?.address}
+                     <a
+                href={
+                  billingAddress.latitude && billingAddress.longitude
+                    ? `https://www.google.com/maps?q=${billingAddress.latitude},${billingAddress.longitude}`
+                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(billingAddress.address)}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {billingAddress?.address}
+              </a>
                   </p>
                 </div>
               ) : (
@@ -276,6 +390,8 @@ const OrdersDetail = () => {
           </div>
         </div>
       </div>
+      <ImagePreviewGallery imageUrl={previewImage} onClose={() => setPreviewImage(null)} />
+
     </div>
   );
 };

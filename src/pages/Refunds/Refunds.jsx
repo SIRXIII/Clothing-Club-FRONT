@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import DefaultProfile from "../../assets/Images/trv_profile.jpg";
 import Pagination from "../../components/Pagination";
 import { useRefunds } from "../../hooks/useRefund";
+import Breadcrumb from "../../components/Breadcrumb";
+import API from "../../services/api";
 
 const Refunds = () => {
   const navigate = useNavigate();
@@ -126,25 +128,41 @@ const Refunds = () => {
     </span>
   );
 
+
+  const handleSupportClick = async (orderId) => {
+
+    console.log("orderId", orderId);
+  try {
+    const res = await API.post("/support/check-or-create", {
+      order_id: orderId,
+    });
+
+
+    console.log("Support chat response:", res.data);
+    if (res.data.status === "created") {
+      toast.success("New support ticket created!");
+    }
+
+    navigate(`/support/chatsupport/${res.data.data.ticket_id}`);
+  } catch (error) {
+    console.error(error);
+    toast.error("Unable to open support chat");
+  }
+};
+
+
   return (
-       <div className="flex flex-col gap-6 p-3">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center text-xs gap-1">
-            <p className="text-[#6C6C6C]">Dashboard</p>
-            <span className="text-[#9A9A9A]">/</span>
-            <p className="text-[#F77F00]">Refund</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-2xl fw6 font-roboto text-[#232323]">
-              Refund
-            </h2>
-            <p className="text-[#232323] text-sm">
-              View and manage all your orders.
-            </p>
-          </div>
-        </div>
+    <div className="gap-6 p-2">
+      <Breadcrumb
+        items={[
+          { label: "Dashboard", path: "/" },
+
+          { label: "Refunds" },
+        ]}
+      />
       <div className="bg-[#FFFFFF] rounded-lg border-color p-6 mt-4">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-400">
               <Search size={16} />
@@ -279,7 +297,7 @@ const Refunds = () => {
                         />
                       </td>
                       <td className="px-4 py-3">{r.refund_id}</td>
-                      <td className="px-4 py-3">#{r.id}</td>
+                      <td className="px-4 py-3">#{r.order?.id}</td>
                       <td className="px-4 py-3">{r.order?.traveler_name}</td>
                       <td className="px-4 py-3">{r.order?.partner_name}</td>
                       <td className="px-4 py-3">{r.requested_at}</td>
@@ -309,10 +327,12 @@ const Refunds = () => {
                             </button>
                             <button
                               className="px-4 py-2 gap-2.5 hover:bg-[#FEF2E6] w-full text-left text-sm"
-                              onClick={() => navigate(`/support/chatsupport`)}
+                              onClick={() => handleSupportClick(r.order.id)}
                             >
                               Chat Support
                             </button>
+
+
                           </div>
                         )}
                       </td>
