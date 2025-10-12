@@ -33,16 +33,15 @@ const Location = ({ productData, handleChange }) => {
           </label>
         </div>
 
-        <div className="relative">
-          <Dropdown
-            label=" SKU"
-            dropdownClass="w-full gap-4"
-            options={["SKU-001", "SKU-002", "SKU-003", "SKU-2031"]}
+         <div className="relative">
+          <input
+            type="text"
+            id="sku"
+            name="sku"
             value={productData.sku}
-            onChange={(val) =>
-              handleChange({ target: { name: "sku", value: val } })
-            }
-            className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+            onChange={handleChange}
+            className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+            placeholder=" "
           />
           <label
             htmlFor="sku"

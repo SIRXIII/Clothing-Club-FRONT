@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import proImg from "../../../assets/Images/Pro_img.jpg";
 import BasicInfo from "./BasicInfo";
 import RentalDetails from "./RentalDetails";
 import Location from "./Location";
 import SizeFit from "./SizeFit";
 import Condition from "./Condition";
+import { FaTimes} from "react-icons/fa";
+import Video from "../../../assets/SVG/video.svg";
 
 const EditProduct = () => {
   const [images, setImages] = useState([proImg, proImg, proImg]);
   const [mainImage, setMainImage] = useState(proImg);
-  const [videoUrl, setVideoUrl] = useState(proImg);
+  const [videoFile, setVideoFile] = useState("https://www.w3schools.com/html/mov_bbb.mp4");
+  const [videoUrl, setVideoUrl] = useState("");
+
   const [productData, setProductData] = useState({
     productname: "Silk Kimono",
     brand: "Zara",
@@ -45,6 +49,29 @@ const EditProduct = () => {
     setProductData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleVideoUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const videoURL = URL.createObjectURL(file);
+      setVideoFile(videoURL);
+      setVideoUrl(""); 
+    }
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoFile(null);
+    setVideoUrl("");
+    const input = document.getElementById("productVideo");
+    if (input) input.value = "";
+  };
+
+  const handleUrlChange = (e) => {
+    setVideoUrl(e.target.value);
+    setVideoFile(null);
+  };
+
+  
+
   return (
     <form>
       <div className="flex flex-col gap-6 p-3">
@@ -57,22 +84,19 @@ const EditProduct = () => {
             <p className="text-[#F77F00]">Edit Product</p>
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-2xl fw6 font-roboto text-[#232323] leading-[140%] tracking-[-3%]">
+            <h2 className="text-2xl fw6 font-roboto text-[#232323] leading-[140%]">
               Edit Product
             </h2>
-            <p className="text-[#232323] text-sm leading-[150%] tracking-[-3%]">
-              Make changes to your product information and ensure it's
-              rental-ready.
+            <p className="text-[#232323] text-sm leading-[150%]">
+              Make changes to your product information and ensure it's rental-ready.
             </p>
           </div>
         </div>
 
-        <div className="bg-white border-color rounded-lg p-4 flex flex-col gap-6 leading-[150%] tracking-[-3%]">
+        <div className="bg-white border-color rounded-lg p-4 flex flex-col gap-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-6">
-              <h3 className="fw5 text-[16px] text-[#232323] leading-[150%] tracking-[-3%] ">
-                Product Image
-              </h3>
+              <h3 className="fw5 text-[16px] text-[#232323]">Product Image</h3>
               <img
                 src={mainImage}
                 alt="main"
@@ -87,12 +111,9 @@ const EditProduct = () => {
                       className="w-full h-full object-cover rounded-[10px] border-color"
                     />
                     <button
-                      onClick={() =>
-                        setImages(images.filter((_, i) => i !== idx))
-                      }
+                      onClick={() => setImages(images.filter((_, i) => i !== idx))}
                       className="absolute -top-[-6px] -right-[-6px] flex items-center justify-center
-                   w-[18px] h-[18px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] 
-                   shadow-[0px_2.4px_2.4px_0px_rgba(0,0,0,0.15)]"
+                   w-[18px] h-[18px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px]"
                     >
                       ✕
                     </button>
@@ -104,101 +125,62 @@ const EditProduct = () => {
               </div>
             </div>
 
-            {/* <div className="flex flex-col gap-4">
-              <h3 className="fw5 text-[16px] text-[#232323] leading-[150%] tracking-[-3%]">
-                Product Video
-              </h3>
-              <div className="relative rounded-lg overflow-hidden">
-                {videoUrl ? (
-                  <>
-                    <video
-                      src={videoUrl}
-                      controls
-                      className="w-full rounded-lg object-cover"
-                    />
-                    <button
-                      onClick={() => setVideoUrl("")}
-                      className="absolute top-2 right-2 flex items-center justify-center
-                     w-[18px] h-[18px] rounded-[3.52px] bg-[#FEF2E6] 
-                     text-[#F77F00] text-[10px] 
-                     shadow-[0px_2.4px_2.4px_0px_rgba(0,0,0,0.15)]"
-                    >
-                      ✕
-                    </button>
-                  </>
+            <div className="flex flex-col gap-6">
+              <h3 className="fw5 text-[16px] text-[#232323]">Product Video</h3>
+
+              <div className="w-full">
+                <input
+                  type="file"
+                  id="productVideo"
+                  accept="video/*"
+                  className="hidden"
+                  onChange={handleVideoUpload}
+                />
+
+                {!videoFile && !videoUrl ? (
+                  <div
+                    className="border-2 border-dashed border-gray-300 justify-center gap-2 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[221px]"
+                    onClick={() => document.getElementById("productVideo").click()}
+                  >
+                      <img src={Video} alt="" className="w-8 h-8 mb-2" />
+                    <p className="text-base fw6 text-[#6C6C6C]">Upload product video</p>
+                    <p className="text-xs text-[#9A9A9A]">Only MP4, MOV, AVI allowed.</p>
+                  </div>
                 ) : (
-                  <div className="flex items-center justify-center w-full h-40 border border-dashed rounded-lg text-gray-400">
-                    No video uploaded
+                  <div className="relative w-full">
+                    <video
+                      src={videoFile || videoUrl}
+                      controls
+                      className="w-full h-60 object-cover rounded-[10px] border"
+                    />
+                    <div className="absolute top-2 right-2 flex gap-2">
+                      
+                      <button
+                        onClick={handleRemoveVideo}
+                        type="button"
+                        className="flex items-center justify-center w-[24px] h-[24px] rounded-md bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-sm hover:bg-[#F77F00] hover:text-white"
+                      >
+                        <FaTimes size={12} />
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2 justify-center">
-                <span className="text-sm text-[#6C6C6C] ">OR</span>
-              </div>
-             <div className="flex flex-col align-bottom">
-               <div className="relative">
-                <input
-                  type="text"
-                  id="videoUrl"
-                  name="videoUrl"
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent 
-                 rounded-xl border border-[#D9D9D9] 
-                 focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
-                  placeholder=" "
-                />
-                <label
-                  htmlFor="videoUrl"
-                  className="absolute text-sm ms-4 text-gray-500 duration-300 transform 
-                 -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2
-                 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-                 peer-placeholder-shown:top-1/2 peer-focus:top-2 
-                 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
-                >
-                  Add URL
-                </label>
-              </div>
-             </div>
-            </div> */}
-
-            <div className="flex flex-col gap-6">
-              <h3 className="fw5 text-[16px] text-[#232323] leading-[150%] tracking-[-3%]">
-                Product Video
-              </h3>
-              {videoUrl && (
-                <div className="relative rounded-lg overflow-hidden">
-                  <video
-                    src={videoUrl}
-                    controls
-                    className="w-full rounded-lg object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setVideoUrl("")}
-                    className="absolute top-2 right-2 flex items-center justify-center
-        w-[18px] h-[18px] rounded-[3.52px] bg-[#FEF2E6] 
-        text-[#F77F00] text-[10px] 
-        shadow-[0px_2.4px_2.4px_0px_rgba(0,0,0,0.15)]"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
 
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-px bg-[#D9D9D9]" />
                 <span className="text-sm text-gray-500">OR</span>
                 <div className="flex-1 h-px bg-[#D9D9D9]" />
               </div>
+
               <div className="relative">
                 <input
                   type="text"
                   id="videoUrl"
                   name="videoUrl"
                   value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  disabled={videoUrl && videoUrl.startsWith("blob:")} // disable if uploaded file is being previewed
+                  onChange={handleUrlChange}
+                  disabled={videoFile}
                   className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer disabled:bg-gray-100 disabled:text-gray-400"
                   placeholder=" "
                 />
@@ -215,22 +197,22 @@ const EditProduct = () => {
         </div>
 
         <BasicInfo productData={productData} handleChange={handleChange} />
-
         <RentalDetails productData={productData} handleChange={handleChange} />
-
         <Location productData={productData} handleChange={handleChange} />
-
         <SizeFit productData={productData} handleChange={handleChange} />
-
         <Condition productData={productData} handleChange={handleChange} />
 
-        {/* <Availability productData={productData} handleChange={handleChange} /> */}
-
-        <div className="relative bottom-0 left-0 right-0 bg-[#FFFFFF]  px-6 py-6 flex justify-end gap-3 ">
-          <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
+        <div className="relative bottom-0 left-0 right-0 bg-[#FFFFFF] px-6 py-6 flex justify-end gap-3">
+          <button
+            type="button"
+            className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
+          >
             Cancel
           </button>
-          <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
+          <button
+            type="submit"
+            className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
+          >
             Save Product
           </button>
         </div>

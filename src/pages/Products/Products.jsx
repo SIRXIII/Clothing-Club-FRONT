@@ -186,7 +186,8 @@ const Products = () => {
               <th className="px-4 py-3">Action</th>
             </tr>
           </thead>
-          <tbody className="bg-white text-[#232323]">
+          <tbody className="bg-white text-[#232323]"
+          onClick={() => navigate("/products/editproduct")}>
             {paginatedProducts.length === 0 ? (
               <tr>
                 <td colSpan="9" className="text-center py-6 text-gray-500">

@@ -4,6 +4,71 @@ import Upload from "../../assets/SVG/upload.svg";
 import Video from "../../assets/SVG/video.svg";
 import { FaTimes } from "react-icons/fa";
 
+// const Dropdown = ({
+//   label,
+//   options = [],
+//   multiple = false,
+//   value,
+//   onChange,
+//   triggerClass,
+//   dropdownClass,
+// }) => {
+//   const [open, setOpen] = useState(false);
+
+//   const handleSelect = (opt) => {
+//     if (multiple) {
+//       const newValue = value.includes(opt)
+//         ? value.filter((v) => v !== opt)
+//         : [...value, opt];
+//       onChange(newValue);
+//     } else {
+//       onChange(opt);
+//       setOpen(false);
+//     }
+//   };
+
+//   const displayValue = multiple ? value.join(", ") || label : value || label;
+
+//   return (
+//     <div
+//       className="relative"
+//       onMouseEnter={() => setOpen(true)}
+//       onMouseLeave={() => setOpen(false)}
+//     >
+//       <div
+//         className={`flex items-center border border-[#afaaaa89] rounded-lg px-4 py-4 cursor-pointer bg-white ${triggerClass}`}
+//         onClick={() => setOpen((prev) => !prev)}
+//       >
+//         <span className="text-[#121212] text-sm flex-1">{displayValue}</span>
+//         <FiChevronDown
+//           className={`transform transition-transform duration-300 w-5 h-5 ${
+//             open ? "rotate-180" : "rotate-0"
+//           }`}
+//         />
+//       </div>
+//       {open && (
+//         <div
+//           className={`absolute top-full left-0 bg-white border border-[#D9D9D9]
+//     rounded-lg shadow-md z-50 ${dropdownClass}`}
+//         >
+//           {options.map((opt, index) => (
+//             <span
+//               key={index}
+//               onClick={() => handleSelect(opt)}
+//               className={`block hover:bg-[#F77F00] hover:text-[#FFFFFF]
+//         p-1 rounded cursor-pointer text-[#121212] py-2 px-4 ${
+//           multiple && value.includes(opt) ? "bg-[#f6a34b] text-white mb-1" : ""
+//         }`}
+//             >
+//               {opt}
+//             </span>
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
 const Dropdown = ({
   label,
   options = [],
@@ -14,8 +79,17 @@ const Dropdown = ({
   dropdownClass,
 }) => {
   const [open, setOpen] = useState(false);
+  const [isOther, setIsOther] = useState(false);
+  const [customValue, setCustomValue] = useState("");
 
   const handleSelect = (opt) => {
+    if (opt === "Other") {
+      setIsOther(true);
+      setOpen(false);
+      onChange("");
+      return;
+    }
+
     if (multiple) {
       const newValue = value.includes(opt)
         ? value.filter((v) => v !== opt)
@@ -23,8 +97,15 @@ const Dropdown = ({
       onChange(newValue);
     } else {
       onChange(opt);
+      setIsOther(false);
       setOpen(false);
     }
+  };
+
+  const handleCustomChange = (e) => {
+    const val = e.target.value;
+    setCustomValue(val);
+    onChange(val);
   };
 
   const displayValue = multiple ? value.join(", ") || label : value || label;
@@ -32,35 +113,68 @@ const Dropdown = ({
   return (
     <div
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => !isOther && setOpen(true)}
+      onMouseLeave={() => !isOther && setOpen(false)}
     >
       <div
-        className={`flex items-center border border-[#afaaaa89] rounded-lg px-4 py-4 cursor-pointer bg-white ${triggerClass}`}
-        onClick={() => setOpen((prev) => !prev)}
+        className={`flex items-center border border-[#afaaaa89] rounded-lg px-4 py-4 bg-white ${triggerClass}`}
       >
-        <span className="text-[#121212] text-sm flex-1">{displayValue}</span>
-        <FiChevronDown
-          className={`transform transition-transform duration-300 w-5 h-5 ${open ? "rotate-180" : "rotate-0"
-            }`}
-        />
+        {isOther ? (
+          <input
+            type="text"
+            value={customValue}
+            onChange={handleCustomChange}
+            onBlur={() => {
+              if (!customValue) setIsOther(false);
+            }}
+            placeholder="Enter"
+            className="flex-1 text-sm text-[#121212] bg-transparent focus:outline-none"
+            autoFocus
+          />
+        ) : (
+          <div
+            className="flex items-center w-full cursor-pointer"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            <span className="text-[#121212] text-sm flex-1">
+              {displayValue || label}
+            </span>
+            <FiChevronDown
+              className={`transform transition-transform duration-300 w-5 h-5 ${
+                open ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </div>
+        )}
       </div>
+
       {open && (
         <div
-          className={`absolute top-full left-0 bg-white border border-[#D9D9D9] 
-    rounded-lg shadow-md z-50 ${dropdownClass}`}
+          className={`absolute top-full left-0 bg-white border border-[#D9D9D9]
+            rounded-lg shadow-md z-50 ${dropdownClass}`}
         >
           {options.map((opt, index) => (
             <span
               key={index}
               onClick={() => handleSelect(opt)}
-              className={`block hover:bg-[#F77F00] hover:text-[#FFFFFF] 
-        p-1 rounded cursor-pointer text-[#121212] py-2 px-4 ${multiple && value.includes(opt) ? "bg-[#f6a34b] text-white mb-1" : ""
+              className={`block hover:bg-[#F77F00] hover:text-[#FFFFFF]
+                p-1 rounded cursor-pointer text-[#121212] py-2 px-4 ${
+                  multiple && value.includes(opt)
+                    ? "bg-[#f6a34b] text-white mb-1"
+                    : ""
                 }`}
             >
               {opt}
             </span>
           ))}
+
+          <span
+            onClick={() => handleSelect("Other")}
+            className="block hover:bg-[#F77F00] hover:text-[#FFFFFF]
+              p-1 rounded cursor-pointer text-[#121212] py-2 px-4"
+          >
+            Other
+          </span>
         </div>
       )}
     </div>
@@ -70,7 +184,8 @@ const Dropdown = ({
 const AddProduct = () => {
   const [images, setImages] = useState([]);
   const [mainImage, setMainImage] = useState();
-  const [videoUrl, setVideoUrl] = useState();
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoUrl, setVideoUrl] = useState("");
   const [productData, setProductData] = useState({
     productname: "",
     brand: "",
@@ -116,7 +231,7 @@ const AddProduct = () => {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     setImages((prev) => [...prev, ...files]);
-    e.target.value = ""; 
+    e.target.value = "";
   };
 
   const handleDeleteImage = (index) => {
@@ -129,7 +244,34 @@ const AddProduct = () => {
     // API call goes here
   };
 
+  const handleVideoUpload = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const fileUrl = URL.createObjectURL(e.target.files[0]);
+      setVideoFile(fileUrl);
+      setVideoUrl("");
+      e.target.value = null;
+    }
+  };
 
+  const handleUrlChange = (e) => {
+    setVideoUrl(e.target.value);
+    setVideoFile(null);
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoFile(null);
+    setVideoUrl("");
+    const input = document.getElementById("productVideo");
+    if (input) input.value = null;
+  };
+
+  // function to auto-generate barcode
+  const generateBarcode = () => {
+    const randomBarcode = Math.floor(
+      100000000000 + Math.random() * 900000000000
+    ).toString(); // 12-digit random number
+    setProductData((prev) => ({ ...prev, barcode: randomBarcode }));
+  };
 
   return (
     <form>
@@ -158,80 +300,6 @@ const AddProduct = () => {
               <h3 className="fw5 leading-[150%] tracking-[-3%] ">
                 Product Image
               </h3>
-              {/* <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
-                onClick={() => document.getElementById("productImages").click()}
-              >
-                <input
-                  type="file"
-                  id="productImages"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-                {images.length > 0 ? (
-                  <div className="grid grid-cols-2 gap-2 w-full">
-                    {images.map((img, i) => (
-                      <div key={i} className="relative">
-                        <img
-                          src={URL.createObjectURL(img)}
-                          alt="Product"
-                          className="w-full h-32 object-cover rounded-lg border"
-                        />
-                        <button
-                          type="button"
-                          className="absolute -top-3 -right-3 bg-[#F77F00]/80 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteImage(i);
-                          }}
-                        >
-                          <FaTimes className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="cursor-pointer flex flex-col items-center gap-1">
-                    <img src={Upload} alt="" className="w-8 h-8 mb-2" />
-                    <p className="text-base fw6 text-[#6C6C6C]">
-                      Upload product images
-                    </p>
-                    <p className="text-xs text-[#9A9A9A]">
-                      Only PNG, JPG allowed.
-                    </p>
-                    <p className="text-xs text-[#9A9A9A]">
-                      500x500 pixels are recommended.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-2">
-                {images.map((img, idx) => (
-                  <div key={idx} className="relative w-24 h-24">
-                    <img
-                      src={img}
-                      alt="product"
-                      className="w-full h-full object-cover rounded-[10px] border-color"
-                    />
-                    <button
-                      onClick={() =>
-                        setImages(images.filter((_, i) => i !== idx))
-                      }
-                      className="absolute -top-[-6px] -right-[-6px] flex items-center justify-center
-                   w-[18px] h-[18px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] 
-                   shadow-[0px_2.4px_2.4px_0px_rgba(0,0,0,0.15)]"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-                <button className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100">
-                  +
-                </button>
-              </div> */}
 
               <div className="w-full">
                 <input
@@ -244,12 +312,18 @@ const AddProduct = () => {
                 />
                 {images.length === 0 ? (
                   <div
-                    className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
-                    onClick={() => document.getElementById("productImages").click()}
+                    className="border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[326px]"
+                    onClick={() =>
+                      document.getElementById("productImages").click()
+                    }
                   >
                     <img src={Upload} alt="" className="w-8 h-8 mb-2" />
-                    <p className="text-base fw6 text-[#6C6C6C]">Upload product images</p>
-                    <p className="text-xs text-[#9A9A9A]">Only PNG, JPG allowed.</p>
+                    <p className="text-base fw6 text-[#6C6C6C]">
+                      Upload product images
+                    </p>
+                    <p className="text-xs text-[#9A9A9A]">
+                      Only PNG, JPG allowed.
+                    </p>
                     <p className="text-xs text-[#9A9A9A]">
                       500x500 pixels are recommended.
                     </p>
@@ -278,7 +352,9 @@ const AddProduct = () => {
                             className="w-full h-full object-cover rounded-[10px] border"
                           />
                           <button
-                            onClick={() => setImages(images.filter((_, i) => i !== idx + 1))}
+                            onClick={() =>
+                              setImages(images.filter((_, i) => i !== idx + 1))
+                            }
                             className="absolute -top-2 -right-2 flex items-center justify-center w-[20px] h-[20px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
                           >
                             <FaTimes size={10} />
@@ -288,7 +364,9 @@ const AddProduct = () => {
                       <button
                         type="button"
                         className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100"
-                        onClick={() => document.getElementById("productImages").click()}
+                        onClick={() =>
+                          document.getElementById("productImages").click()
+                        }
                       >
                         +
                       </button>
@@ -296,119 +374,72 @@ const AddProduct = () => {
                   </>
                 )}
               </div>
-
             </div>
 
             <div className="flex flex-col gap-6">
               <h3 className="font-semibold">Product Video</h3>
-              {/* <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center cursor-pointer"
-                onClick={() => document.getElementById("productVideo").click()}
-              >
+              <div className="w-full">
                 <input
                   type="file"
                   id="productVideo"
                   accept="video/*"
                   className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setVideoUrl(URL.createObjectURL(e.target.files[0]));
-                    }
-                  }}
+                  onChange={handleVideoUpload}
                 />
 
-                {videoUrl ? (
-                  <div className="relative w-full">
-                    <video
-                      src={videoUrl}
-                      controls
-                      className="w-full h-40 object-cover rounded-lg border"
-                    />
-                    <button
-                      type="button"
-                      className="absolute -top-3 -right-3 bg-[#F77F00]/80 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setVideoUrl("");
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ) : (
-                  <div className="cursor-pointer flex flex-col items-center gap-1">
+                {!videoFile ? (
+                  <div
+                    className="border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[221px]"
+                    onClick={() =>
+                      document.getElementById("productVideo").click()
+                    }
+                  >
                     <img src={Video} alt="" className="w-8 h-8 mb-2" />
                     <p className="text-base fw6 text-[#6C6C6C]">
-                      Upload your product video
+                      Upload product video
+                    </p>
+                    <p className="text-xs text-[#9A9A9A]">
+                      Only MP4, MOV, AVI allowed.
                     </p>
                   </div>
-                )}
-              </div> */}
-
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer relative"
-                style={{ minHeight: "220px" }}
-                onClick={() => document.getElementById("productVideo").click()}
-              >
-                <input
-                  type="file"
-                  id="productVideo"
-                  accept="video/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setVideoUrl(URL.createObjectURL(e.target.files[0]));
-                    }
-                  }}
-                />
-
-                {videoUrl ? (
-                  <div className="relative w-full h-full flex items-center justify-center">
+                ) : (
+                  <div className="relative w-full">
                     <video
-                      src={videoUrl}
+                      src={videoFile}
                       controls
-                      className="w-full h-48 object-cover rounded-md border border-gray-300"
+                      className="w-full h-60 object-cover rounded-[10px] border"
                     />
                     <button
-                      type="button"
-                      className="absolute top-2 right-2 bg-[#F77F00]/80 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setVideoUrl();
-                      }}
+                      onClick={handleRemoveVideo}
+                      className="absolute -top-2 -right-2 flex items-center justify-center w-[24px] h-[24px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
                     >
-                      ✕
+                      <FaTimes size={12} />
                     </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-1 pointer-events-none">
-                    <img src={Video} alt="" className="w-8 h-8 mb-2" />
-                    <p className="text-base fw6 text-[#6C6C6C]">Upload your product video</p>
                   </div>
                 )}
               </div>
 
-
               <div className="flex items-center gap-2 justify-center">
-                <span className="text-sm text-[#6C6C6C] ">OR</span>
+                <span className="text-sm text-[#6C6C6C]">OR</span>
               </div>
+
               <div className="relative">
                 <input
                   type="text"
                   id="videoUrl"
                   name="videoUrl"
                   value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
+                  onChange={handleUrlChange}
                   className="block p-4 pt-4 w-full text-sm text-[#939393] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="videoUrl"
                   className="absolute text-sm ms-4 text-[#939393] duration-300 transform 
-                 -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2
-                 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-                 peer-placeholder-shown:top-1/2 peer-focus:top-2 
-                 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
+                  -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2
+                  peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                  peer-placeholder-shown:top-1/2 peer-focus:top-2 
+                  peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
                 >
                   Add URL
                 </label>
@@ -788,7 +819,7 @@ const AddProduct = () => {
               </label>
             </div>
 
-            <div className="relative">
+            {/* <div className="relative">
               <Dropdown
                 label=" SKU"
                 dropdownClass="w-full gap-4"
@@ -802,6 +833,25 @@ const AddProduct = () => {
                   setProductData((prev) => ({ ...prev, sku: val }))
                 }
                 className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              />
+              <label
+                htmlFor="sku"
+                className="absolute text-sm ms-4 text-[#939393] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
+              >
+                SKU
+              </label>
+            </div> */}
+
+            <div className="relative">
+              <input
+                type="text"
+                id="sku"
+                name="sku"
+                value={productData.sku}
+                onChange={handleChange}
+                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                placeholder=" "
               />
               <label
                 htmlFor="sku"
@@ -831,16 +881,26 @@ const AddProduct = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className=" flex flex-col items-center justify-center gap-6">
+            {/* <div className="flex gap-3 pt-11">
+              <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
+                Auto Generate
+              </button>
+            </div> */}
+            <div className="flex flex-col items-center justify-center gap-6">
               <span>QR Code</span>
               <img
                 src=""
                 alt=""
-                className="w-25 h-25  bg-[#D9D9D9] rounded-lg "
+                className="w-25 h-25 bg-[#D9D9D9] rounded-lg"
               />
             </div>
-            <div className="flex gap-3 pt-11">
-              <button className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00]  rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]">
+
+            <div className="flex gap-3 pt-10">
+              <button
+                onClick={generateBarcode}
+                type="button"
+                className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg  hover:bg-[#F77F00] hover:text-[#FFFFFF]"
+              >
                 Auto Generate
               </button>
             </div>
