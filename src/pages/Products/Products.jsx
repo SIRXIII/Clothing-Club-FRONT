@@ -33,6 +33,8 @@ const Products = () => {
         setLoading(true);
         const { data } = await API.get("/products");
         setProducts(data.data || []);
+
+        console.log("products", data.data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch products");
@@ -258,7 +260,7 @@ const Products = () => {
                     </td>
                     <td className="px-4 py-3 flex items-center gap-2">
                       <img
-                        src={p.images?.[0]?.url || productImg}
+                        src={p.images?.[0]?.image_url || productImg}
                         alt={p.name}
                         className="w-10 h-10 rounded object-cover"
                         onError={(e) => {
