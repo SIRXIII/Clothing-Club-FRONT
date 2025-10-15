@@ -7,7 +7,7 @@ import API from "../../services/api";
 import QRCode from "qrcode";
 import Breadcrumb from "../../components/Breadcrumb";
 import backward from "../../assets/SVG/backward.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Dropdown = ({
@@ -127,6 +127,8 @@ const AddProduct = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [errors, setErrors] = useState({});
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const navigate = useNavigate();
+
   const [productData, setProductData] = useState({
     productname: "",
     brand: "",
@@ -202,9 +204,6 @@ const AddProduct = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      console.log("✅ Product created:", response.data);
-
-      // Reset form
       setProductData({
         productname: "",
         brand: "",
@@ -239,6 +238,9 @@ const AddProduct = () => {
       setVideoFile(null);
       setVideoUrl("");
       setErrors({});
+
+      toast.success("Product added successfully!");
+      navigate('/products', { replace: true });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
         const validationErrors = error.response.data.errors;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import API from "../../../services/api";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Video from "../../../assets/SVG/video.svg";
 import BasicInfo from "./BasicInfo";
 import RentalDetails from "./RentalDetails";
@@ -10,6 +10,7 @@ import SizeFit from "./SizeFit";
 import Condition from "./Condition";
 import backward from "../../../assets/SVG/backward.svg";
 import Breadcrumb from "../../../components/Breadcrumb";
+import { toast } from "react-toastify";
 
 
 const EditProduct = () => {
@@ -23,6 +24,8 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
   const [productData, setProductData] = useState({
     productname: "",
     brand: "",
@@ -213,7 +216,8 @@ const EditProduct = () => {
       await API.post(`products/${productId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("✅ Product updated successfully!");
+      toast.success("Product updated successfully!");
+      navigate('/products', { replace: true });
     } catch {
       // setError("Failed to update product.");
     } finally {
