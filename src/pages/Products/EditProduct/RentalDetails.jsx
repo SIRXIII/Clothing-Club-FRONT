@@ -3,7 +3,7 @@ import Dropdown from "../../../components/Dropdown";
 
 const RentalDetails = ({ productData, handleChange }) => {
   return (
-    <form>
+    // <form>
       <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
         <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
           Rental Details
@@ -15,7 +15,14 @@ const RentalDetails = ({ productData, handleChange }) => {
               id="basePrice"
               name="basePrice"
               value={productData.basePrice}
-              onChange={handleChange}
+              onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (/^\d*\.?\d*$/.test(value)) {
+                      handleChange(e);
+                    }
+                  }}
+                  pattern="^\d+(\.\d{1,2})?$"
               className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               placeholder=" "
             />
@@ -55,7 +62,13 @@ const RentalDetails = ({ productData, handleChange }) => {
               id="deposite"
               name="deposite"
               value={productData.deposite}
-              onChange={handleChange}
+               onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (/^\d*\.?\d*$/.test(value)) {
+                      handleChange(e);
+                    }
+                  }}
               className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               placeholder=" "
             />
@@ -74,7 +87,14 @@ const RentalDetails = ({ productData, handleChange }) => {
               id="lateFee"
               name="lateFee"
               value={productData.lateFee}
-              onChange={handleChange}
+              onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (/^\d*\.?\d*$/.test(value)) {
+                      handleChange(e);
+                    }
+                  }}
+                  pattern="^\d+(\.\d{1,2})?$"
               className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               placeholder=" "
             />
@@ -90,7 +110,7 @@ const RentalDetails = ({ productData, handleChange }) => {
             <Dropdown
               label=" Replacement Value"
               dropdownClass="w-full gap-4"
-              options={["$150/day", "$180/day", "$200/day"]}
+              options={["100", "150", "200"]}
               value={productData.replacementValue}
               onChange={(val) =>
                 handleChange({target: { name: "replacementValue", value: val },})
@@ -111,7 +131,14 @@ const RentalDetails = ({ productData, handleChange }) => {
               id="keepToBuyPrice"
               name="keepToBuyPrice"
               value={productData.keepToBuyPrice}
-              onChange={handleChange}
+               onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (/^\d*\.?\d*$/.test(value)) {
+                      handleChange(e);
+                    }
+                  }}
+                  pattern="^\d+(\.\d{1,2})?$"
               className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
               placeholder=" "
             />
@@ -208,7 +235,7 @@ const RentalDetails = ({ productData, handleChange }) => {
           </div>
         </div>
       </div>
-    </form>
+    // </form>  
   );
 };
 

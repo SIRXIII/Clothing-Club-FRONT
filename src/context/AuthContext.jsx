@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [pending2FA, setPending2FA] = useState(null);
   const [loginToken, setLoginToken] = useState("");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -189,23 +190,48 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-  const logout = async () => {
-    try {
-      await API.post("/logout");
-    } catch (error) {
+  // const logout = async () => {
+  //   try {
+  //     await API.post("/logout");
+  //   } catch (error) {
 
-    } finally {
-      setToken(null);
-      setUser(null);
-      setPending2FA(null);
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_user");
-      localStorage.removeItem("type");
-      delete API.defaults.headers.Authorization;
-      oauthService.cleanup();
-      navigate("/login");
-    }
-  };
+  //   } finally {
+  //     setToken(null);
+  //     setUser(null);
+  //     setPending2FA(null);
+  //     localStorage.removeItem("auth_token");
+  //     localStorage.removeItem("auth_user");
+  //     localStorage.removeItem("type");
+  //     delete API.defaults.headers.Authorization;
+  //     oauthService.cleanup();
+  //     navigate("/login");
+  //   }
+  // };
+  const logout = async () => {
+  // Prevent multiple concurrent logouts
+  if (isLoggingOut) return;
+  setIsLoggingOut(true);
+
+  try {
+    await API.post("/logout");
+  } catch (error) {
+    
+  } finally {
+    
+    setToken(null);
+    setUser(null);
+    setPending2FA(null);
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("auth_user");
+    localStorage.removeItem("type");
+    delete API.defaults.headers.Authorization;
+    oauthService.cleanup();
+
+    navigate("/login", { replace: true });
+
+    setIsLoggingOut(false);
+  }
+};
 
   const markAsRead = async (id) => {
     try {

@@ -19,3 +19,8 @@ export const getTopPartners = async () => {
   return response.data;
 };
 
+
+export const latestNotification = async () => {
+  const response = await API.get("dashboard/notifications/latest");
+  return response.data;
+};
