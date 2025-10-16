@@ -92,7 +92,7 @@ const RefundsDetail = () => {
       toast.success("New support ticket created!");
     }
 
-    navigate(`/support/chatsupport/${res.data.data.ticket_id}`);
+    navigate(`/support/chatsupport/${res.data.data.id}`);
   } catch (error) {
     console.error(error);
     toast.error("Unable to open support chat");
