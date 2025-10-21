@@ -11,6 +11,7 @@ import Condition from "./Condition";
 import backward from "../../../assets/SVG/backward.svg";
 import Breadcrumb from "../../../components/Breadcrumb";
 import { toast } from "react-toastify";
+import ImagePreviewGallery from "../../../components/ImagePreviewGallery";
 
 
 const EditProduct = () => {
@@ -24,6 +25,8 @@ const EditProduct = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const navigate = useNavigate();
   const [productData, setProductData] = useState({
@@ -193,6 +196,17 @@ const EditProduct = () => {
     setVideoFile(null);
   };
 
+  // Image preview handlers
+  const handleImageClick = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setIsPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewOpen(false);
+    setPreviewImage(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -278,7 +292,8 @@ const EditProduct = () => {
                   <img
                     src={mainImage}
                     alt="main"
-                    className="w-full h-full object-cover rounded-lg border"
+                    className="w-full h-full object-cover rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => handleImageClick(mainImage)}
                   />
                   <button
                     onClick={() => {
@@ -312,7 +327,8 @@ const EditProduct = () => {
                       <img
                         src={img.image_url}
                         alt="gallery"
-                        className="w-full h-full object-cover rounded-[10px] border cursor-not-allowed"
+                        className="w-full h-full object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => handleImageClick(img.image_url)}
                       />
                       <button
                         onClick={() => handleRemoveImage(img.image_url, img?.id)}
@@ -449,6 +465,14 @@ const EditProduct = () => {
           </button>
         </div>
       </form>
+
+      {/* Image Preview Gallery */}
+      {isPreviewOpen && (
+        <ImagePreviewGallery
+          imageUrl={previewImage}
+          onClose={handleClosePreview}
+        />
+      )}
     </div>
   );
 };

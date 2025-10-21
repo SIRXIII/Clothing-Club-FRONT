@@ -9,6 +9,7 @@ const Dropdown = ({
   onChange,
   triggerClass,
   dropdownClass,
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [isOther, setIsOther] = useState(false);
@@ -45,11 +46,11 @@ const Dropdown = ({
   return (
     <div
       className="relative"
-      onMouseEnter={() => !isOther && setOpen(true)}
-      onMouseLeave={() => !isOther && setOpen(false)}
+      onMouseEnter={() => !isOther && !disabled && setOpen(true)}
+      onMouseLeave={() => !isOther && !disabled && setOpen(false)}
     >
       <div
-        className={`flex items-center border border-[#afaaaa89] rounded-lg px-4 py-4 bg-white ${triggerClass}`}
+        className={`flex items-center border border-[#afaaaa89] rounded-lg px-4 py-4 ${disabled ? 'bg-gray-50 cursor-not-allowed' : 'bg-white'} ${triggerClass}`}
       >
         {isOther ? (
           <input
@@ -60,13 +61,14 @@ const Dropdown = ({
               if (!customValue) setIsOther(false);
             }}
             placeholder="Enter"
-            className="flex-1 text-sm text-[#121212] bg-transparent focus:outline-none"
+            disabled={disabled}
+            className={`flex-1 text-sm text-[#121212] bg-transparent focus:outline-none ${disabled ? 'cursor-not-allowed' : ''}`}
             autoFocus
           />
         ) : (
           <div
-            className="flex items-center w-full cursor-pointer"
-            onClick={() => setOpen((prev) => !prev)}
+            className={`flex items-center w-full ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={() => !disabled && setOpen((prev) => !prev)}
           >
             <span className="text-[#121212] text-sm flex-1">
               {displayValue || label}
@@ -80,7 +82,7 @@ const Dropdown = ({
         )}
       </div>
 
-      {open && (
+      {open && !disabled && (
         <div
           className={`absolute top-full left-0 bg-white border border-[#D9D9D9]
             rounded-lg shadow-md z-50 ${dropdownClass}`}

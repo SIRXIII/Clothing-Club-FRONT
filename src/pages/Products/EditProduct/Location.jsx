@@ -3,7 +3,7 @@ import Dropdown from "../../../components/Dropdown";
 import QRCode from "qrcode";
 import ImagePreviewGallery from "../../../components/ImagePreviewGallery";
 
-const Location = ({ productData, handleChange }) => {
+const Location = ({ productData, handleChange, viewMode = false }) => {
   const [qrUrl, setQrUrl] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -69,7 +69,8 @@ const Location = ({ productData, handleChange }) => {
               onChange={(val) =>
                 handleChange({ target: { name: "location", value: val } })
               }
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
             />
             <label
               htmlFor="location"
@@ -87,7 +88,8 @@ const Location = ({ productData, handleChange }) => {
               name="sku"
               value={productData.sku}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -106,7 +108,8 @@ const Location = ({ productData, handleChange }) => {
               name="barcode"
               value={productData.barcode}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -129,34 +132,36 @@ const Location = ({ productData, handleChange }) => {
             />
           </div>
 
-          <div className="flex gap-3 pt-11">
-            {!qrUrl ? (
-              <button
-                onClick={handleAutoGenerate}
-                type="button"
-                className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
-              >
-                Auto Generate
-              </button>
-            ) : (
-              <>
+          {!viewMode && (
+            <div className="flex gap-3 pt-11">
+              {!qrUrl ? (
                 <button
-                  onClick={() => setIsPreviewOpen(true)}
+                  onClick={handleAutoGenerate}
                   type="button"
                   className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
                 >
-                  Preview
+                  Auto Generate
                 </button>
-                <button
-                  onClick={handleDownload}
-                  type="button"
-                  className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
-                >
-                  Download
-                </button>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setIsPreviewOpen(true)}
+                    type="button"
+                    className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
+                  >
+                    Preview
+                  </button>
+                  <button
+                    onClick={handleDownload}
+                    type="button"
+                    className="px-4 py-3 text-sm border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg hover:bg-[#F77F00] hover:text-[#FFFFFF]"
+                  >
+                    Download
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

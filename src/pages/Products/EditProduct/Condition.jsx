@@ -2,7 +2,7 @@ import React from 'react'
 import Dropdown from "../../../components/Dropdown";
 
 
-const Condition = ({ productData, handleChange }) => {
+const Condition = ({ productData, handleChange, viewMode = false }) => {
   return (
      <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
           <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
@@ -18,7 +18,8 @@ const Condition = ({ productData, handleChange }) => {
                 onChange={(val) =>
                 handleChange({ target: { name: "coditionGrade", value: val } })
                 }
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               />
               <label
                 htmlFor="coditionGrade"
@@ -43,7 +44,8 @@ const Condition = ({ productData, handleChange }) => {
                 onChange={(val) =>
                 handleChange({ target: { name: "status", value: val } })
                 }
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               />
               <label
                 htmlFor="status"
@@ -61,7 +63,8 @@ const Condition = ({ productData, handleChange }) => {
               name="note"
               value={productData.note}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label

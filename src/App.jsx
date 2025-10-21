@@ -17,6 +17,7 @@ import RefundsDetail from "./pages/Refunds/RefundsDetail";
 import TwoFactor from "./components/TwoFactor";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditProduct from "./pages/Products/EditProduct/EditProduct";
+import ViewProduct from "./pages/Products/ViewProduct/ViewProduct";
 import AddProduct from "./pages/Products/AddProduct";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const App = () => {
 
             <Route path="/products/addproduct" element={<AddProduct />} />
             <Route path="/products/editproduct/:id" element={<EditProduct />} />
+            <Route path="/products/viewproduct/:id" element={<ViewProduct />} />
 
             <Route
               path="/refund/refundsdetail/:id"

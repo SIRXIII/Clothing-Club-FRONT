@@ -1,7 +1,7 @@
 import React from "react";
 import Dropdown from "../../../components/Dropdown";
 
-const BasicInfo = ({ productData, handleChange }) => {
+const BasicInfo = ({ productData, handleChange, viewMode = false }) => {
   return (
    <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
           <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
@@ -15,7 +15,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 name="productname"
                 value={productData.productname}
                 onChange={handleChange}
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                 placeholder=" "
               />
               <label
@@ -37,7 +38,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 onChange={(val) =>
                   handleChange({ target: { name: "brand", value: val } })
                 }
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               />
               <label
                 htmlFor="brand"
@@ -55,7 +57,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 name="color"
                 value={productData.color}
                 onChange={handleChange}
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                 placeholder=" "
               />
               <label
@@ -75,7 +78,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 name="material"
                 value={productData.material}
                 onChange={handleChange}
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                 placeholder=" "
               />
               <label
@@ -102,7 +106,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 onChange={(val) =>
                 handleChange({ target: { name: "careMethod", value: val } })
                 }
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               />
               <label
                 htmlFor="careMethod"
@@ -120,7 +125,8 @@ const BasicInfo = ({ productData, handleChange }) => {
                 name="weight"
                 value={productData.weight}
                 onChange={handleChange}
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                disabled={viewMode}
+                className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
                 placeholder=" "
               />
               <label

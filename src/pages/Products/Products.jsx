@@ -5,6 +5,7 @@ import API from "../../services/api";
 import Editing from "../../assets/SVG/editing.svg";
 import Rating from "../../assets/SVG/rating.svg";
 import Delete from "../../assets/SVG/delete.svg";
+import Eye from "../../assets/SVG/eyeorange.svg";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import productImg from "../../assets/Images/Pro_img.jpg";
@@ -287,6 +288,15 @@ const Products = () => {
                     <td className="px-4 py-3">${p.base_price}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            navigate("/products/viewproduct/" + p.id)
+                          }
+                          className="p-2 rounded-lg border bg-[#FEF2E6] text-[#CA4E2E] hover:bg-[#f9dbbe]"
+                          title="View Product"
+                        >
+                          <img src={Eye} alt="view" />
+                        </button>
                         <button
                           onClick={() =>
                             navigate("/products/editproduct/" + p.id)

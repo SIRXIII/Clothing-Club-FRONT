@@ -1,7 +1,7 @@
 import React from "react";
 import Dropdown from "../../../components/Dropdown";
 
-const RentalDetails = ({ productData, handleChange }) => {
+const RentalDetails = ({ productData, handleChange, viewMode = false }) => {
   return (
     // <form>
       <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
@@ -23,7 +23,8 @@ const RentalDetails = ({ productData, handleChange }) => {
                     }
                   }}
                   pattern="^\d+(\.\d{1,2})?$"
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -45,7 +46,8 @@ const RentalDetails = ({ productData, handleChange }) => {
               onChange={(val) =>
                 handleChange({ target: { name: "extensionPrice", value: val } })
               }
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
             />
             <label
               htmlFor="extensionPrice"
@@ -69,7 +71,8 @@ const RentalDetails = ({ productData, handleChange }) => {
                       handleChange(e);
                     }
                   }}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -95,7 +98,8 @@ const RentalDetails = ({ productData, handleChange }) => {
                     }
                   }}
                   pattern="^\d+(\.\d{1,2})?$"
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -115,7 +119,8 @@ const RentalDetails = ({ productData, handleChange }) => {
               onChange={(val) =>
                 handleChange({target: { name: "replacementValue", value: val },})
               }
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
             />
             <label
               htmlFor="replacementValue"
@@ -139,7 +144,8 @@ const RentalDetails = ({ productData, handleChange }) => {
                     }
                   }}
                   pattern="^\d+(\.\d{1,2})?$"
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -165,7 +171,8 @@ const RentalDetails = ({ productData, handleChange }) => {
                   target: { name: "minRentalPeriod", value: val },
                 })
               }
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
             />
             <label
               htmlFor="minRentalPeriod"
@@ -183,7 +190,8 @@ const RentalDetails = ({ productData, handleChange }) => {
               name="maxRentalPeriod"
               value={productData.maxRentalPeriod}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -202,7 +210,8 @@ const RentalDetails = ({ productData, handleChange }) => {
               name="prepBuffer"
               value={productData.prepBuffer}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -221,7 +230,8 @@ const RentalDetails = ({ productData, handleChange }) => {
               name="date"
               value={productData.date}
               onChange={handleChange}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label

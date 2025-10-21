@@ -1,12 +1,14 @@
 import React from "react";
 import Dropdown from "../../../components/Dropdown";
 
-const SizeFit = ({ productData, setProductData, handleChange }) => {
+const SizeFit = ({ productData, setProductData, handleChange, viewMode = false }) => {
   const handleUnitChange = (unit) => {
-    setProductData((prev) => ({
-      ...prev,
-      sizeUnit: unit,
-    }));
+    if (!viewMode) {
+      setProductData((prev) => ({
+        ...prev,
+        sizeUnit: unit,
+      }));
+    }
   };
 
   return (
@@ -28,7 +30,8 @@ const SizeFit = ({ productData, setProductData, handleChange }) => {
           onChange={(val) =>
             setProductData((prev) => ({ ...prev, fitType: val }))
           }
-          className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9]"
+          disabled={viewMode}
+          className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
         />
         <label
           htmlFor="fitType"
@@ -50,7 +53,8 @@ const SizeFit = ({ productData, setProductData, handleChange }) => {
                 const value = e.target.value;
                 if (/^\d*\.?\d*$/.test(value)) handleChange(e);
               }}
-              className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9]"
+              disabled={viewMode}
+              className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
               placeholder=" "
             />
             <label
@@ -71,9 +75,12 @@ const SizeFit = ({ productData, setProductData, handleChange }) => {
             key={unit}
             type="button"
             onClick={() => handleUnitChange(unit)}
+            disabled={viewMode}
             className={`px-4 py-3 rounded-lg border transition-all duration-200 ${
               productData.sizeUnit === unit
                 ? "bg-[#F77F00] text-white border-[#F77F00]"
+                : viewMode
+                ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
                 : "bg-[#FFF5EC] text-[#F77F00] border border-[#F77F00] hover:bg-[#F77F00] hover:text-white"
             }`}
           >
