@@ -1,6 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 import MainLayout from "./Layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products/Products";
@@ -29,6 +33,8 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/two-factor" element={<TwoFactor />} />
 
           <Route
@@ -60,6 +66,18 @@ const App = () => {
             <Route path="/support/chatsupport/:id" element={<ChatSupport />} />
           </Route>
         </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </QueryClientProvider>
     </AuthProvider>
   );

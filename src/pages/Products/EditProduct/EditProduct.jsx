@@ -10,7 +10,7 @@ import SizeFit from "./SizeFit";
 import Condition from "./Condition";
 import backward from "../../../assets/SVG/backward.svg";
 import Breadcrumb from "../../../components/Breadcrumb";
-import { toast } from "react-toastify";
+import { handleApiError, showSuccess } from "../../../utils/toastHelper";
 import ImagePreviewGallery from "../../../components/ImagePreviewGallery";
 
 
@@ -230,10 +230,11 @@ const EditProduct = () => {
       await API.post(`products/${productId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Product updated successfully!");
+      showSuccess("Product updated successfully!");
       navigate('/products', { replace: true });
-    } catch {
-      // setError("Failed to update product.");
+    } catch (error) {
+      handleApiError(error);
+      setError("Failed to update product.");
     } finally {
       setSaving(false);
     }

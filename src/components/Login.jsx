@@ -9,6 +9,7 @@ import EyeOff from "../assets/SVG/password-hidden.svg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { handleApiError } from "../utils/toastHelper";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +31,8 @@ const Login = () => {
     } catch (err) {
       setError(err.message);
       setFieldErrors(err.errors);
+      // Also show toast notifications for better UX
+      handleApiError(err, setFieldErrors);
     }
   };
 

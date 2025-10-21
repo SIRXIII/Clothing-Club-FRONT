@@ -8,6 +8,7 @@ import QRCode from "qrcode";
 import Breadcrumb from "../../components/Breadcrumb";
 import backward from "../../assets/SVG/backward.svg";
 import { Link, useNavigate } from "react-router-dom";
+import { handleApiError, showSuccess } from "../../utils/toastHelper";
 
 
 const Dropdown = ({
@@ -239,9 +240,10 @@ const AddProduct = () => {
       setVideoUrl("");
       setErrors({});
 
-      toast.success("Product added successfully!");
+      showSuccess("Product added successfully!");
       navigate('/products', { replace: true });
     } catch (error) {
+      handleApiError(error, setErrors);
       if (error.response && error.response.data && error.response.data.errors) {
         const validationErrors = error.response.data.errors;
         setErrors(validationErrors);
