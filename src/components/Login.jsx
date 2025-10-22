@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TCCImage from "../assets/Images/TCC_bg.jpg";
 import { FiEye } from "react-icons/fi";
 import logo from "../assets/SVG/logo.svg";
-import apple from "../assets/SVG/apple.svg";
+import facebook from "../assets/SVG/facebook.svg";
 import shopify from "../assets/SVG/shopify.svg";
 import google from "../assets/SVG/google.svg";
 import EyeOff from "../assets/SVG/password-hidden.svg";
@@ -73,13 +73,13 @@ const Login = () => {
     // window.addEventListener('message', handleMessage);
   };
 
-  const handleAppleLogin = () => {
-    setOauthLoading('apple');
+  const handleFacebookLogin = () => {
+    setOauthLoading('facebook');
     setError("");
     
     // Direct redirect to backend OAuth endpoint
     const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
-    window.location.href = `${API_URL}/social/apple/redirect`;
+    window.location.href = `${API_URL}/social/facebook/redirect`;
   };
 
   const handleShopifyLogin = async () => {
@@ -281,17 +281,17 @@ const Login = () => {
 
             <div className="flex space-x-4">
               <button 
-                onClick={handleAppleLogin}
+                onClick={handleFacebookLogin}
                 disabled={oauthLoading !== null}
                 className="w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {oauthLoading === 'apple' ? (
+                {oauthLoading === 'facebook' ? (
                   <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
                 ) : (
-                  <img src={apple} alt="" />
+                  <img src={facebook} alt="" />
                 )}
                 <span className="text-base fw6">
-                  {oauthLoading === 'apple' ? 'Connecting...' : 'Sign in with Apple'}
+                  {oauthLoading === 'facebook' ? 'Connecting...' : 'Sign in with Facebook'}
                 </span>
               </button>
               <button 

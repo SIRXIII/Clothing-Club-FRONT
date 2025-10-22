@@ -7,8 +7,8 @@ import { toast } from "react-toastify";
 const Password = () => {
   const currentUser = JSON.parse(localStorage.getItem("auth_user")) || {};
 
-  // Check if user logged in via OAuth (Google, Apple, Shopify)
-  const isOAuthUser = currentUser.provider && ['google', 'apple', 'shopify'].includes(currentUser.provider);
+  // Check if user logged in via OAuth (Google, Facebook, Shopify)
+  const isOAuthUser = currentUser.provider && ['google', 'facebook', 'shopify'].includes(currentUser.provider);
 
   const [formData, setFormData] = useState({
     oldpassword: "",
