@@ -244,8 +244,15 @@ const Products = () => {
             <tbody className="bg-white text-[#232323]">
               {paginatedProducts.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="text-center py-6 text-gray-500">
-                    No products found.
+                  <td colSpan={9} className="h-[200px]">
+                    <div className="flex flex-col items-center justify-center h-full text-center p-6">
+                      <p className="text-orange-500 font-semibold text-lg">
+                        No products found.
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Try adjusting filters or check back later.
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
