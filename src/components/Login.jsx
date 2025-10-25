@@ -41,7 +41,7 @@ const Login = () => {
     setOauthLoading('google');
     setError("");
     
-    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
     
     // Option 1: Direct redirect (current approach)
     window.location.href = `${API_URL}/social/google/redirect`;
@@ -78,7 +78,7 @@ const Login = () => {
     setError("");
     
     // Direct redirect to backend OAuth endpoint
-    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
     window.location.href = `${API_URL}/social/facebook/redirect`;
   };
 
@@ -108,7 +108,7 @@ const Login = () => {
       sessionStorage.setItem('shopify_domain', shopDomain);
       
       // Direct redirect to backend OAuth endpoint
-      const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-admin.online/api';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
       window.location.href = `${API_URL}/social/shopify/redirect?shop=${encodeURIComponent(shopDomain)}`;
       
     } catch (error) {
