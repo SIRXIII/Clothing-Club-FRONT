@@ -548,28 +548,7 @@ const Products = () => {
               )}
             </div>
 
-            {/* Bulk Actions for Mobile (dropdown below Add Product) */}
-            <div className="relative sm:hidden w-full" ref={dropdownRef}>
-              <button
-                onClick={() => setBulkOpen((prev) => !prev)}
-                className="flex items-center justify-between border border-[#F77F00] bg-[#FEF2E6] rounded-lg px-3 py-2 text-sm text-[#F77F00] gap-2 w-full"
-              >
-                Bulk Actions <FiChevronDown size={14} />
-              </button>
-
-              {bulkOpen && (
-                <div className="absolute left-0 mt-2 w-full bg-white border border-[#F77F00]/30 rounded-lg shadow-lg z-50">
-                  <ul className="text-sm text-[#232323]">
-                    <li
-                      onClick={() => handleBulkAction("delete")}
-                      className="px-4 py-3 hover:bg-[#FEF2E6] rounded-lg cursor-pointer capitalize"
-                    >
-                      Delete Selected
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+          
           </div>
 
         </div>
