@@ -43,7 +43,10 @@ const TwoFA = () => {
       const res = await API.post("/2fa/generate-totp");
       setQrData(res.data.qr);
       setRecoveryCode(res.data.recovery_codes);
-      localStorage.setItem("auth_user", JSON.stringify(data.user));
+      if (res.data.user) {
+        localStorage.setItem("auth_user", JSON.stringify(res.data.user));
+      }
+      toast.success("TOTP generated successfully!");
     } catch (error) {
       console.log("error", error);
       toast.error("Failed to generate TOTP QR code");
@@ -59,7 +62,9 @@ const TwoFA = () => {
       setRecoveryCode(res.data.recovery_codes);
       setShowRecoveryInput(false);
       setRecoveryInput("");
-      localStorage.setItem("auth_user", JSON.stringify(data.user));
+      if (res.data.user) {
+        localStorage.setItem("auth_user", JSON.stringify(res.data.user));
+      }
 
       toast.success("QR regenerated successfully!");
     } catch (error) {

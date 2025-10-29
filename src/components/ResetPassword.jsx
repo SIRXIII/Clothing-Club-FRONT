@@ -26,11 +26,9 @@ const ResetPassword = () => {
   useEffect(() => {
     // Check if token and email are present
     if (!formData.token || !formData.email) {
-      setError("Invalid reset link. Please request a new password reset.");
-      console.log("Reset password error - Token:", formData.token, "Email:", formData.email);
+      setError("Invalid reset link. Please request a new password reset from the login page.");
     } else {
       setError(""); // Clear error if both are present
-      console.log("Reset password success - Token:", formData.token, "Email:", formData.email);
     }
   }, [formData.token, formData.email]);
 
@@ -48,9 +46,23 @@ const ResetPassword = () => {
     setMessage("");
     setFieldErrors({});
 
+    // Validate password length
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      setLoading(false);
+      return;
+    }
+
+    // Validate password match
+    if (formData.password !== formData.password_confirmation) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await API.post("/reset-password", formData);
-      const successMessage = response.data.message || "Password reset successfully";
+      const successMessage = response.data.message || "Password reset successfully! Redirecting to login...";
       setMessage(successMessage);
       showSuccess(successMessage);
       
@@ -59,12 +71,19 @@ const ResetPassword = () => {
         navigate("/login");
       }, 2000);
     } catch (err) {
-      handleApiError(err, setFieldErrors);
+      console.error("Reset password error:", err);
+      
       if (err.response?.data?.errors) {
         setFieldErrors(err.response.data.errors);
+        const firstError = Object.values(err.response.data.errors)[0];
+        setError(Array.isArray(firstError) ? firstError[0] : firstError);
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
       } else {
-        setError(err.response?.data?.message || "Failed to reset password");
+        setError("Failed to reset password. Please try again or request a new reset link.");
       }
+      
+      handleApiError(err, setFieldErrors);
     } finally {
       setLoading(false);
     }

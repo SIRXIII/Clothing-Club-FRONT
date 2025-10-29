@@ -74,11 +74,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     setShowLogoutConfirm(true);
   };
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
     setShowLogoutConfirm(false);
     setIsOpen(false);
-    navigate("/login");
+    await logout();
+    // navigate is already called inside logout function
   };
 
   const cancelLogout = () => {

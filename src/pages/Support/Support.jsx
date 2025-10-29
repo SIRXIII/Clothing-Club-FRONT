@@ -234,57 +234,72 @@ const Support = () => {
                 </tr>
               </thead>
               <tbody className="bg-white text-[#232323]">
-                {paginatedTickets.map((ticket) => (
-                  <tr
-                    key={ticket.id}
-                    className="hover:bg-[#FEF2E6] cursor-pointer transition-colors"
-                    onClick={() => navigate(`/support/chatsupport/${ticket.id}`)}
-                  >
-                    <td className="px-2.5 py-4">
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(ticket.id)}
-                        onChange={() => handleSelectOne(ticket.id)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </td>
-                    <td className="p-2.5">{ticket.ticket_id}</td>
-                    <td className="p-2.5">{ticket.sender?.type}</td>
-                    <td className="px-2.5 py-4">
-                      <div className="flex items-center gap-2.5">
-                        <img
-                          src={ticket?.sender?.profile_photo || DefaultProfile}
-                          alt={ticket?.sender?.name}
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-[#4F4F4F]">{ticket?.sender?.name}</span>
-                          <span className="text-xs text-[#6C6C6C]">{ticket?.sender?.email}</span>
-                        </div>
+                {paginatedTickets.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="h-[200px]">
+                      <div className="flex flex-col items-center justify-center h-full text-center p-6">
+                        <p className="text-orange-500 font-semibold text-lg">
+                          No support found.
+                        </p>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Try adjusting filters or check back later.
+                        </p>
                       </div>
                     </td>
-                    <td className="p-2.5">{ticket.subject}</td>
-                    <td className="p-2.5">{ticket.created_at}</td>
-                    <td className="p-2.5">
-                      <span
-                        className={`px-3 py-1 text-xs fw5 rounded-md ${getStatusClass(ticket.status)}`}
-                      >
-                        {ticket.status}
-                      </span>
-                    </td>
-                    <td className="p-2.5">
-                      <button
-                        className="p-2.5 rounded-lg border bg-[#FEF2E6] border-[#F77F00]"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/support/chatsupport/${ticket.id}`);
-                        }}
-                      >
-                        <img src={Eye} alt="view" />
-                      </button>
-                    </td>
                   </tr>
-                ))}
+                ) : (
+                  paginatedTickets.map((ticket) => (
+                    <tr
+                      key={ticket.id}
+                      className="hover:bg-[#FEF2E6] cursor-pointer transition-colors"
+                      onClick={() => navigate(`/support/chatsupport/${ticket.id}`)}
+                    >
+                      <td className="px-2.5 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selected.includes(ticket.id)}
+                          onChange={() => handleSelectOne(ticket.id)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </td>
+                      <td className="p-2.5">{ticket.ticket_id}</td>
+                      <td className="p-2.5">{ticket.sender?.type}</td>
+                      <td className="px-2.5 py-4">
+                        <div className="flex items-center gap-2.5">
+                          <img
+                            src={ticket?.sender?.profile_photo || DefaultProfile}
+                            alt={ticket?.sender?.name}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-[#4F4F4F]">{ticket?.sender?.name}</span>
+                            <span className="text-xs text-[#6C6C6C]">{ticket?.sender?.email}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-2.5">{ticket.subject}</td>
+                      <td className="p-2.5">{ticket.created_at}</td>
+                      <td className="p-2.5">
+                        <span
+                          className={`px-3 py-1 text-xs fw5 rounded-md ${getStatusClass(ticket.status)}`}
+                        >
+                          {ticket.status}
+                        </span>
+                      </td>
+                      <td className="p-2.5">
+                        <button
+                          className="p-2.5 rounded-lg border bg-[#FEF2E6] border-[#F77F00]"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/support/chatsupport/${ticket.id}`);
+                          }}
+                        >
+                          <img src={Eye} alt="view" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 
 class OAuthService {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || "https://travelclothingclub-admin.online/api";
+    this.baseURL = import.meta.env.VITE_API_URL || "https://travelclothingclub-partner.online/api";
     this.redirectUri = `${window.location.origin}/auth/callback`; // default generic
     this.useProviderSpecificCallbacks = true;
   }
@@ -63,22 +63,8 @@ class OAuthService {
     return this.initiateLogin('google');
   }
 
-  async initiateAppleLogin() {
-    try {
-      sessionStorage.setItem('oauth_provider', 'apple');
-      
-      // Tell backend to use non-API callback URL
-      const callbackUrl = `${window.location.origin}/oauth/apple/callback`;
-      const response = await API.get('/social/apple/redirect', {
-        params: { redirect_uri: callbackUrl }
-      });
-      
-      const redirectUrl = response.data.data?.redirect_url || response.data.redirect_url;
-      if (redirectUrl) window.location.href = redirectUrl;
-      else throw new Error('No redirect URL received from server');
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to initiate Apple login');
-    }
+  async initiateFacebookLogin() {
+    return this.initiateLogin('facebook');
   }
 
   async initiateShopifyLogin() {

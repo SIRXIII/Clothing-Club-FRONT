@@ -142,11 +142,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loginWithApple = async () => {
+  const loginWithFacebook = async () => {
     try {
-      oauthService.initiateAppleLogin();
+      oauthService.initiateFacebookLogin();
     } catch (error) {
-      throw new Error(error.message || "Failed to initiate Apple login");
+      throw new Error(error.message || "Failed to initiate Facebook login");
     }
   };
 
@@ -280,7 +280,7 @@ export const AuthProvider = ({ children }) => {
         "/forgot-password", 
         "/reset-password",
         "/oauth/google/callback",
-        "/oauth/apple/callback", 
+        "/oauth/facebook/callback", 
         "/oauth/shopify/callback"
       ];
       if (!publicRoutes.includes(location.pathname)) {
@@ -324,7 +324,7 @@ export const AuthProvider = ({ children }) => {
     login,
     notifications,
     loginWithGoogle,
-    loginWithApple,
+    loginWithFacebook,
     loginWithShopify,
     handleOAuthCallback,
     setAuthFromExternal,
