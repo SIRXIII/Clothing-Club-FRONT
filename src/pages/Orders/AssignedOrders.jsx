@@ -35,100 +35,124 @@ const AssignedOrders = ({ orders = [], handleSort, renderSortIcon }) => {
   };
 
   return (
-    <table className="w-full text-left text-sm leading-[150%] tracking-[-3%] border-collapse">
-      <thead className="bg-[#F9F9F9] text-[#6C6C6C] fw5">
-        <tr className="cursor-pointer">
-          <th className="px-4 py-3">
-            <input
-              type="checkbox"
-              className="w-4.5 h-4.5 rounded border-[1.5px] border-[#9A9A9A]"
-              onChange={handleSelectAll}
-              checked={selected.length === orders.length && orders.length > 0}
-            />
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("id")}>
-            Order ID {renderSortIcon("id")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("traveler.name")}>
-            Traveler Name {renderSortIcon("traveler.name")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("partner.name")}>
-            Partner Name {renderSortIcon("partner.name")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("eta")}>
-            ETA {renderSortIcon("eta")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("created_at")}>
-            Date {renderSortIcon("created_at")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("status")}>
-            Status {renderSortIcon("status")}
-          </th>
-          <th className="px-4 py-3" onClick={() => handleSort("total_price")}>
-            Total {renderSortIcon("total_price")}
-          </th>
-          <th className="px-4 py-3">View</th>
-        </tr>
-      </thead>
-
-      <tbody className="bg-white fw4 text-[#232323]">
-        {orders.map((order) => (
-          <tr
-            key={order.id}
-            className="text-sm hover:bg-[#FEF2E6] cursor-pointer transition-colors"
-            onClick={() => navigate(`/orders/ordersdetail/${order.id}`)}
-          >
-            <td className="px-4 py-3">
+    <>
+      <table className="hidden md:table w-full text-left text-sm leading-[150%] tracking-[-3%] border-collapse">
+        <thead className="bg-[#F9F9F9] text-[#6C6C6C] fw5">
+          <tr className="cursor-pointer">
+            <th className="px-4 py-3">
               <input
                 type="checkbox"
                 className="w-4.5 h-4.5 rounded border-[1.5px] border-[#9A9A9A]"
-                checked={selected.includes(order.id)}
-                onChange={() => handleSelectOne(order.id)}
+                onChange={handleSelectAll}
+                checked={selected.length === orders.length && orders.length > 0}
               />
-            </td>
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("id")}>
+              Order ID {renderSortIcon("id")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("traveler.name")}>
+              Traveler Name {renderSortIcon("traveler.name")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("partner.name")}>
+              Partner Name {renderSortIcon("partner.name")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("eta")}>
+              ETA {renderSortIcon("eta")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("created_at")}>
+              Date {renderSortIcon("created_at")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("status")}>
+              Status {renderSortIcon("status")}
+            </th>
+            <th className="px-4 py-3" onClick={() => handleSort("total_price")}>
+              Total {renderSortIcon("total_price")}
+            </th>
+            <th className="px-4 py-3">View</th>
+          </tr>
+        </thead>
 
-            <td className="px-4 py-3 text-[#F77F00] fw5">#ODR-{order.id}</td>
-
-            <td className="px-4 py-3">
-              <div className="flex gap-2.5">
-                <img
-                  src={order?.traveler?.profile_photo || DefaultProfile}
-                  alt="Traveler"
-                  className="w-6 h-6 rounded-xl object-cover object-center"
-                  onError={(e) => (e.currentTarget.src = DefaultProfile)}
+        <tbody className="bg-white fw4 text-[#232323]">
+          {orders.map((order) => (
+            <tr
+              key={order.id}
+              className="text-sm hover:bg-[#FEF2E6] cursor-pointer transition-colors"
+              onClick={() => navigate(`/orders/ordersdetail/${order.id}`)}
+            >
+              <td className="px-4 py-3">
+                <input
+                  type="checkbox"
+                  className="w-4.5 h-4.5 rounded border-[1.5px] border-[#9A9A9A]"
+                  checked={selected.includes(order.id)}
+                  onChange={() => handleSelectOne(order.id)}
                 />
-                <div>
-                  <p className="text-[#4F4F4F] text-sm">
-                    {order.traveler?.name}
-                  </p>
-                  <p className="text-[#6C6C6C] text-xs">
-                    {order.traveler?.email}
-                  </p>
+              </td>
+              <td className="px-4 py-3 text-[#F77F00] fw5">#ODR-{order.id}</td>
+              <td className="px-4 py-3">
+                <div className="flex gap-2.5">
+                  <img
+                    src={order?.traveler?.profile_photo || DefaultProfile}
+                    alt="Traveler"
+                    className="w-6 h-6 rounded-xl object-cover object-center"
+                    onError={(e) => (e.currentTarget.src = DefaultProfile)}
+                  />
+                  <div>
+                    <p className="text-[#4F4F4F] text-sm">{order.traveler?.name}</p>
+                    <p className="text-[#6C6C6C] text-xs">{order.traveler?.email}</p>
+                  </div>
                 </div>
-              </div>
-            </td>
-
-            <td className="px-4 py-3">
-              <div className="flex gap-2.5">
-                <img
-                  src={order?.partner?.profile_photo || DefaultProfile}
-                  alt="Partner"
-                  className="w-6 h-6 rounded-xl object-cover object-center"
-                  onError={(e) => (e.currentTarget.src = DefaultProfile)}
-                />
-                <div>
-                  <p className="text-[#4F4F4F] text-sm">{order.partner?.name}</p>
-                  <p className="text-[#6C6C6C] text-xs">
-                    {order.partner?.email}
-                  </p>
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex gap-2.5">
+                  <img
+                    src={order?.partner?.profile_photo || DefaultProfile}
+                    alt="Partner"
+                    className="w-6 h-6 rounded-xl object-cover object-center"
+                    onError={(e) => (e.currentTarget.src = DefaultProfile)}
+                  />
+                  <div>
+                    <p className="text-[#4F4F4F] text-sm">{order.partner?.name}</p>
+                    <p className="text-[#6C6C6C] text-xs">{order.partner?.email}</p>
+                  </div>
                 </div>
-              </div>
-            </td>
+              </td>
+              <td className="px-4 py-3">{order.eta || "-"}</td>
+              <td className="px-4 py-3">{order.created_at}</td>
+              <td className="px-4 py-3">
+                <span
+                  className={`px-3 py-1 text-xs fw5 rounded-md ${getStatusClass(
+                    order.status
+                  )}`}
+                >
+                  {order.status}
+                </span>
+              </td>
+              <td className="px-4 py-3">${order.total_price}</td>
+              <td className="px-4 py-3">
+                <button
+                  className="p-2 rounded-lg border bg-[#FEF2E6] text-[#CA4E2E]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/orders/ordersdetail/${order.id}`);
+                  }}
+                >
+                  <img src={Eye} alt="View" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-            <td className="px-4 py-3">{order.eta || "-"}</td>
-            <td className="px-4 py-3">{order.created_at}</td>
-
-            <td className="px-4 py-3">
+      <div className="md:hidden flex flex-col gap-3">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="bg-white rounded-xl p-4 shadow-sm border border-[#E5E5E5]"
+            onClick={() => navigate(`/orders/ordersdetail/${order.id}`)}
+          >
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-[#F77F00] fw5">#ODR-{order.id}</p>
               <span
                 className={`px-3 py-1 text-xs fw5 rounded-md ${getStatusClass(
                   order.status
@@ -136,11 +160,35 @@ const AssignedOrders = ({ orders = [], handleSort, renderSortIcon }) => {
               >
                 {order.status}
               </span>
-            </td>
-
-            <td className="px-4 py-3">${order.total_price}</td>
-
-            <td className="px-4 py-3">
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <img
+                src={order?.traveler?.profile_photo || DefaultProfile}
+                alt="Traveler"
+                className="w-8 h-8 rounded-xl object-cover object-center"
+                onError={(e) => (e.currentTarget.src = DefaultProfile)}
+              />
+              <div>
+                <p className="text-[#4F4F4F] text-sm">{order.traveler?.name}</p>
+                <p className="text-[#6C6C6C] text-xs">{order.traveler?.email}</p>
+              </div>
+            </div>
+            <div className="text-xs text-[#6C6C6C] space-y-1">
+              <p>
+                <span className="fw5 text-[#4F4F4F]">Partner:</span>{" "}
+                {order.partner?.name}
+              </p>
+              <p>
+                <span className="fw5 text-[#4F4F4F]">ETA:</span> {order.eta || "-"}
+              </p>
+              <p>
+                <span className="fw5 text-[#4F4F4F]">Date:</span> {order.created_at}
+              </p>
+              <p>
+                <span className="fw5 text-[#4F4F4F]">Total:</span> ${order.total_price}
+              </p>
+            </div>
+            <div className="flex justify-end mt-3">
               <button
                 className="p-2 rounded-lg border bg-[#FEF2E6] text-[#CA4E2E]"
                 onClick={(e) => {
@@ -150,11 +198,11 @@ const AssignedOrders = ({ orders = [], handleSort, renderSortIcon }) => {
               >
                 <img src={Eye} alt="View" />
               </button>
-            </td>
-          </tr>
+            </div>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </>
   );
 };
 

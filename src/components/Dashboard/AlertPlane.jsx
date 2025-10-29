@@ -17,7 +17,7 @@ const AlertPlane = () => {
         {notifications.map((item) => (
           <div
             key={item.id}
-            className="flex flex-col p-4 rounded-lg border border-gray-200 bg-white gap-4"
+           className="flex flex-col p-4 sm:p-5 rounded-lg border border-gray-200 bg-white gap-3"
           >
             <div className="flex justify-between items-start">
             
@@ -27,12 +27,6 @@ const AlertPlane = () => {
                   {item.label}
                 </h6>
              
-
-              {/* <span
-                className={`px-3 py-1 text-xs rounded-md fw5 gap-2.5 ${item.statusColor} whitespace-nowrap`}
-              >
-                {item.status}
-              </span> */}
             </div>
              <div className="flex flex-col leading-[150%] fw5 tracking-[-3%] gap-3">
                   <p className="text-sm  text-[#232323] ">

@@ -154,51 +154,53 @@ const Support = () => {
   }, [filteredTickets, page, perPage]);
 
   return (
-    <div className="flex flex-col gap-6 p-3">
-      {/* Header */}
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center text-xs gap-1 leading-[150%] tracking-[-3%]">
-          <p className="text-[#6C6C6C]">Dashboard</p>
-          <span className=" text-[#9A9A9A]">/</span>
-          <p className="text-[#F77F00]">Support</p>
+  <div className="flex flex-col gap-6 p-3">
+    {/* Header */}
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center text-xs gap-1 leading-[150%] tracking-[-3%]">
+        <p className="text-[#6C6C6C]">Dashboard</p>
+        <span className=" text-[#9A9A9A]">/</span>
+        <p className="text-[#F77F00]">Support</p>
+      </div>
+      <div>
+        <h2 className="text-2xl font-roboto fw6 text-[#232323]">Support Ticket</h2>
+        <p className="text-[#232323] text-sm">
+          View and manage all queries from the users in the platform.
+        </p>
+      </div>
+    </div>
+
+    {/* Main Table Section */}
+    <div className="bg-white rounded-lg border-color overflow-x-auto p-6 gap-6">
+      {/* Search + Status Filter */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+        <div className="relative text-[#9A9A9A] w-full md:w-auto">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <FiSearch size={16} />
+          </span>
+          <input
+            type="text"
+            placeholder="Search"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="pl-9 pr-2 py-2 border border-[#D9D9D9] rounded-lg text-base w-full md:w-[320px] focus:outline-none"
+          />
         </div>
-        <div>
-          <h2 className="text-2xl font-roboto fw6 text-[#232323]">Support Ticket</h2>
-          <p className="text-[#232323] text-sm">
-            View and manage all queries from the users in the platform.
-          </p>
-        </div>
+        <button className="flex items-center justify-between border border-[#23232333] rounded-lg px-3 py-2 text-sm text-[#9A9A9A] gap-3 w-full md:w-auto">
+          Status
+          <FiChevronDown size={16} />
+        </button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg border-color overflow-x-auto p-6 gap-6">
-        {/* Search + Status Filter */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
-          <div className="relative text-[#9A9A9A]">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-              <FiSearch size={16} />
-            </span>
-            <input
-              type="text"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              className="pl-9 pr-2 py-2 border border-[#D9D9D9] rounded-lg text-base w-[320px] focus:outline-none"
-            />
-          </div>
-          <button className="flex items-center justify-between border border-[#23232333] rounded-lg px-3 py-2 text-sm text-[#9A9A9A] gap-3 max-w-[127px]">
-            Status
-            <FiChevronDown size={16} />
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="text-center p-6">Loading tickets...</div>
-        ) : (
-          <>
+      {loading ? (
+        <div className="text-center p-6">Loading tickets...</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead className="bg-[#F9F9F9] text-[#6C6C6C] font-medium">
                 <tr>
@@ -285,23 +287,72 @@ const Support = () => {
                 ))}
               </tbody>
             </table>
+          </div>
 
-            {paginatedTickets.length > 0 && (
-              <Pagination
-                page={page}
-                setPage={setPage}
-                perPage={perPage}
-                setPerPage={setPerPage}
-                totalItems={filteredTickets.length}
-                options={[5, 10, 25, 50]}
-                fullWidth={true}
-              />
-            )}
-          </>
-        )}
-      </div>
+          {/* Mobile Cards */}
+          <div className="grid gap-4 md:hidden">
+            {paginatedTickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                className="border border-[#EAEAEA] rounded-xl p-4 flex flex-col gap-3 hover:bg-[#FEF2E6] cursor-pointer transition-colors"
+                onClick={() => navigate(`/support/chatsupport/${ticket.id}`)}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-medium text-[#232323]">#{ticket.ticket_id}</p>
+                  <span
+                    className={`px-3 py-1 text-xs fw5 rounded-md ${getStatusClass(ticket.status)}`}
+                  >
+                    {ticket.status}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={ticket?.sender?.profile_photo || DefaultProfile}
+                    alt={ticket?.sender?.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="text-[#4F4F4F] text-sm">{ticket?.sender?.name}</p>
+                    <p className="text-xs text-[#6C6C6C]">{ticket?.sender?.email}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-[#6C6C6C]">
+                  <span className="font-medium text-[#232323]">Subject:</span> {ticket.subject}
+                </p>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-xs text-[#9A9A9A]">{ticket.created_at}</span>
+                  <button
+                    className="flex items-center gap-2 px-3 py-1 border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] rounded-lg text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/support/chatsupport/${ticket.id}`);
+                    }}
+                  >
+                    <img src={Eye} alt="view" className="w-4 h-4" /> View
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {paginatedTickets.length > 0 && (
+            <Pagination
+              page={page}
+              setPage={setPage}
+              perPage={perPage}
+              setPerPage={setPerPage}
+              totalItems={filteredTickets.length}
+              options={[5, 10, 25, 50]}
+              fullWidth={true}
+            />
+          )}
+        </>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Support;
