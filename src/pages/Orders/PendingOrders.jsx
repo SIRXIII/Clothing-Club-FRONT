@@ -153,6 +153,8 @@ const PendingOrders = ({ orders = [], handleSort, renderSortIcon }) => {
         ))}
       </tbody>
     </table>
+    </div>
+    </>
   );
 };
 

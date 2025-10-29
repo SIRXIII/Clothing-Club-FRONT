@@ -516,7 +516,8 @@ const Products = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap sm:flex-nowrap gap-2 relative">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 relative w-full justify-end">
+            {/* Add Product Button */}
             <button
               className="flex items-center justify-center border border-[#F77F00] bg-[#F77F00] rounded-lg px-3 py-2 text-sm text-white gap-2 w-full sm:w-auto"
               onClick={() => navigate("/products/addproduct")}
@@ -524,15 +525,40 @@ const Products = () => {
               + Add Product
             </button>
 
-            <div className="relative w-full hidden sm:block" ref={dropdownRef}>
+            {/* Bulk Actions Dropdown (visible only on md+ screens) */}
+            <div className="relative hidden sm:block" ref={dropdownRef}>
               <button
                 onClick={() => setBulkOpen((prev) => !prev)}
-                className="flex items-center justify-between w-full sm:w-auto border border-[#F77F00] bg-[#FEF2E6] rounded-lg px-3 py-2 text-sm text-[#F77F00] gap-2"
+                className="flex items-center justify-between border border-[#F77F00] bg-[#FEF2E6] rounded-lg px-3 py-2 text-sm text-[#F77F00] gap-2 w-full sm:w-auto"
               >
                 Bulk Actions <FiChevronDown size={14} />
               </button>
+
               {bulkOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border-color rounded-lg shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-[#F77F00]/30 rounded-lg shadow-lg z-50">
+                  <ul className="text-sm text-[#232323]">
+                    <li
+                      onClick={() => handleBulkAction("delete")}
+                      className="px-4 py-3 hover:bg-[#FEF2E6] rounded-lg cursor-pointer capitalize"
+                    >
+                      Delete Selected
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Bulk Actions for Mobile (dropdown below Add Product) */}
+            <div className="relative sm:hidden w-full" ref={dropdownRef}>
+              <button
+                onClick={() => setBulkOpen((prev) => !prev)}
+                className="flex items-center justify-between border border-[#F77F00] bg-[#FEF2E6] rounded-lg px-3 py-2 text-sm text-[#F77F00] gap-2 w-full"
+              >
+                Bulk Actions <FiChevronDown size={14} />
+              </button>
+
+              {bulkOpen && (
+                <div className="absolute left-0 mt-2 w-full bg-white border border-[#F77F00]/30 rounded-lg shadow-lg z-50">
                   <ul className="text-sm text-[#232323]">
                     <li
                       onClick={() => handleBulkAction("delete")}
@@ -545,6 +571,7 @@ const Products = () => {
               )}
             </div>
           </div>
+
         </div>
 
         {/* Loading/Error/Table */}
@@ -611,9 +638,42 @@ const Products = () => {
                     <td className="px-4 py-3">{p.stock}</td>
                     <td className="px-4 py-3">${p.base_price}</td>
                     <td className="px-4 py-3 flex gap-2">
-                      <img src={Eye} alt="view" onClick={() => navigate("/products/viewproduct/" + p.id)} className="w-6 h-6 cursor-pointer" />
+                      {/* <img src={Eye} alt="view" onClick={() => navigate("/products/viewproduct/" + p.id)} className="w-6 h-6 cursor-pointer" />
                       <img src={Editing} alt="edit" onClick={() => navigate("/products/editproduct/" + p.id)} className="w-6 h-6 cursor-pointer" />
-                      <img src={Delete} alt="delete" onClick={() => { setDeleteId(p.id); setConfirmOpen(true); }} className="w-6 h-6 cursor-pointer" />
+                      <img src={Delete} alt="delete" onClick={() => { setDeleteId(p.id); setConfirmOpen(true); }} className="w-6 h-6 cursor-pointer" /> */}
+
+                      <div className="flex items-center gap-2">
+                        {/* View Button */}
+                        <button
+                          onClick={() => navigate(`/products/viewproduct/${p.id}`)}
+                          title="View Product"
+                          className="p-2 md:p-2.5 rounded-lg border bg-[#FEF2E6] text-[#CA4E2E] hover:bg-[#f9dbbe] w-8 h-8 md:w-10 md:h-10 flex items-center justify-center transition-all"
+                        >
+                          <img src={Eye} alt="view" className="w-4 h-4 md:w-5 md:h-5" />
+                        </button>
+
+                        {/* Edit Button */}
+                        <button
+                          onClick={() => navigate(`/products/editproduct/${p.id}`)}
+                          title="Edit Product"
+                          className="p-2 md:p-2.5 rounded-lg  text-[#F77F00]   flex items-center justify-center transition-all"
+                        >
+                          <img src={Editing} alt="edit" className="w-10 h-10" />
+                        </button>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => {
+                            setDeleteId(p.id);
+                            setConfirmOpen(true);
+                          }}
+                          title="Delete Product"
+                          className="p-2 md:p-2.5 rounded-lg border bg-[#FCEBEC] text-[#CA4E2E] hover:bg-[#f9dbbe] w-8 h-8 md:w-10 md:h-10 flex items-center justify-center transition-all"
+                        >
+                          <img src={Delete} alt="delete" className="w-4 h-4 md:w-5 md:h-5" />
+                        </button>
+                      </div>
+
                     </td>
                   </tr>
                 ))}
