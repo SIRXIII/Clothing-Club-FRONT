@@ -9,6 +9,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import backward from "../../assets/SVG/backward.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { handleApiError, showSuccess } from "../../utils/toastHelper";
+import ImagePreviewGallery from "../../components/ImagePreviewGallery";
 
 
 const Dropdown = ({
@@ -136,6 +137,10 @@ const AddProduct = () => {
   const [apiProcessedImages, setApiProcessedImages] = useState([]);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
 
+  // Image preview states
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const [productData, setProductData] = useState({
     productname: "",
     brand: "",
@@ -225,6 +230,17 @@ const AddProduct = () => {
 
   const handleRemoveApiImage = (index) => {
     setApiProcessedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Image preview handlers
+  const handleImageClick = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setIsPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewOpen(false);
+    setPreviewImage(null);
   };
 
   const handleSubmit = async (e) => {
@@ -482,7 +498,8 @@ const AddProduct = () => {
                         <img
                           src={URL.createObjectURL(images[0])}
                           alt="main product"
-                          className="w-full h-60 object-cover rounded-[10px] border"
+                          className="w-full h-60 object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => handleImageClick(URL.createObjectURL(images[0]))}
                         />
                         <button
                           type="button"
@@ -498,7 +515,8 @@ const AddProduct = () => {
                             <img
                               src={URL.createObjectURL(img)}
                               alt="product"
-                              className="w-full h-full object-cover rounded-[10px] border"
+                              className="w-full h-full object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
+                              onClick={() => handleImageClick(URL.createObjectURL(img))}
                             />
                             <button
                               type="button"
@@ -527,6 +545,30 @@ const AddProduct = () => {
               ) : (
                 // ENHANCED UPLOAD METHOD
                 <div className="w-full flex flex-col gap-4">
+                  {/* Gender Selection for AI Model */}
+                  <div className="flex flex-col gap-2 p-3 bg-[#FFF5EC] rounded-lg border border-[#F77F00]/20">
+                    <span className="text-sm fw6 text-[#232323]">Choose Model Type:</span>
+                    <div className="flex gap-2">
+                      {["Female", "Male"].map((genderOption) => (
+                        <button
+                          key={genderOption}
+                          type="button"
+                          onClick={() => setProductData((prev) => ({ ...prev, gender: genderOption }))}
+                          className={`flex-1 px-4 py-2 rounded-lg text-sm fw6 transition-all duration-200 ${
+                            productData.gender === genderOption
+                              ? "bg-[#F77F00] text-white shadow-sm"
+                              : "bg-white text-[#F77F00] border border-[#F77F00]/30 hover:bg-[#F77F00]/10"
+                          }`}
+                        >
+                          {genderOption} Model
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-[#9A9A9A]">
+                      Selected: <span className="fw6 text-[#F77F00]">{productData.gender}</span> - This will be used for AI try-on visualization
+                    </p>
+                  </div>
+
                   <input
                     type="file"
                     id="apiProductImage"
@@ -538,7 +580,7 @@ const AddProduct = () => {
                   
                   {apiProcessedImages.length === 0 ? (
                     <div
-                      className={`border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[326px] ${
+                      className={`border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[280px] ${
                         isProcessingImage ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                       onClick={() =>
@@ -567,7 +609,8 @@ const AddProduct = () => {
                         <img
                           src={apiProcessedImages[0].displayUrl || apiProcessedImages[0].original_api_url || apiProcessedImages[0].url || apiProcessedImages[0]}
                           alt="processed product"
-                          className="w-full h-60 object-cover rounded-[10px] border"
+                          className="w-full h-60 object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => handleImageClick(apiProcessedImages[0].displayUrl || apiProcessedImages[0].original_api_url || apiProcessedImages[0].url || apiProcessedImages[0])}
                         />
                         <button
                           type="button"
@@ -589,7 +632,8 @@ const AddProduct = () => {
                             <img
                               src={img.displayUrl || img.original_api_url || img.url || img}
                               alt="processed"
-                              className="w-full h-full object-cover rounded-[10px] border"
+                              className="w-full h-full object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
+                              onClick={() => handleImageClick(img.displayUrl || img.original_api_url || img.url || img)}
                             />
                             <button
                               type="button"
@@ -1619,6 +1663,14 @@ const AddProduct = () => {
           </button>
         </div>
       </form>
+
+      {/* Image Preview Gallery */}
+      {isPreviewOpen && (
+        <ImagePreviewGallery
+          imageUrl={previewImage}
+          onClose={handleClosePreview}
+        />
+      )}
     </div>
   );
 };

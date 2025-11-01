@@ -373,6 +373,29 @@ const EditProduct = () => {
                 </div>
               </div>
 
+              {/* Gender Selection for Enhanced Quality */}
+              {imageUploadMethod === "api" && (
+                <div className="flex items-center gap-3 p-3 bg-[#FFF5EC] rounded-lg border border-[#F77F00]/20">
+                  <span className="text-sm fw6 text-[#232323]">Select Model:</span>
+                  <div className="flex gap-2">
+                    {["Female", "Male"].map((genderOption) => (
+                      <button
+                        key={genderOption}
+                        type="button"
+                        onClick={() => setProductData((prev) => ({ ...prev, gender: genderOption }))}
+                        className={`px-4 py-2 rounded-lg text-xs fw6 transition-all duration-200 ${
+                          productData.gender === genderOption
+                            ? "bg-[#F77F00] text-white shadow-sm"
+                            : "bg-white text-[#F77F00] border border-[#F77F00]/30 hover:bg-[#F77F00]/10"
+                        }`}
+                      >
+                        {genderOption}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {mainImage ? (
                 <div className="relative w-full h-60">
                   <img
@@ -402,6 +425,32 @@ const EditProduct = () => {
                     onChange={handleAddImage}
                   />
                 </label>
+              )}
+
+              {/* Gender Selection for Enhanced Quality - in Gallery Section */}
+              {imageUploadMethod === "api" && (
+                <div className="flex flex-col gap-2 p-3 bg-[#FFF5EC] rounded-lg border border-[#F77F00]/20">
+                  <span className="text-sm fw6 text-[#232323]">Choose Model Type:</span>
+                  <div className="flex gap-2">
+                    {["Female", "Male"].map((genderOption) => (
+                      <button
+                        key={genderOption}
+                        type="button"
+                        onClick={() => setProductData((prev) => ({ ...prev, gender: genderOption }))}
+                        className={`flex-1 px-4 py-2 rounded-lg text-xs fw6 transition-all duration-200 ${
+                          productData.gender === genderOption
+                            ? "bg-[#F77F00] text-white shadow-sm"
+                            : "bg-white text-[#F77F00] border border-[#F77F00]/30 hover:bg-[#F77F00]/10"
+                        }`}
+                      >
+                        {genderOption} Model
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#9A9A9A]">
+                    Selected: <span className="fw6 text-[#F77F00]">{productData.gender}</span> - For AI try-on visualization
+                  </p>
+                </div>
               )}
 
               {/* Gallery: only show non-primary images */}
@@ -464,9 +513,11 @@ const EditProduct = () => {
               </div>
 
               {isProcessingImage && imageUploadMethod === "api" && (
-                <div className="flex items-center justify-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-600 border-t-transparent"></div>
-                  <span>Enhancing your image...</span>
+                <div className="flex flex-col items-center justify-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 text-sm text-green-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-600 border-t-transparent"></div>
+                    <span className="fw6">Enhancing your image with {productData.gender} model...</span>
+                  </div>
                 </div>
               )}
             </div>
