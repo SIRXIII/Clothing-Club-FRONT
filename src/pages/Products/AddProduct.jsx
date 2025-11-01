@@ -206,7 +206,12 @@ const AddProduct = () => {
 
       // Backend returns processed image URL and metadata
       if (response.data && response.data.success && response.data.processed_image) {
-        setApiProcessedImages((prev) => [...prev, response.data.processed_image]);
+        // Use original_api_url for display as it's on CDN and publicly accessible
+        const processedImage = {
+          ...response.data.processed_image,
+          displayUrl: response.data.processed_image.original_api_url || response.data.processed_image.url
+        };
+        setApiProcessedImages((prev) => [...prev, processedImage]);
         showSuccess('✨ Your image has been enhanced successfully!');
       }
     } catch (error) {
@@ -560,7 +565,7 @@ const AddProduct = () => {
                     <>
                       <div className="relative w-full">
                         <img
-                          src={apiProcessedImages[0].url || apiProcessedImages[0]}
+                          src={apiProcessedImages[0].displayUrl || apiProcessedImages[0].original_api_url || apiProcessedImages[0].url || apiProcessedImages[0]}
                           alt="processed product"
                           className="w-full h-60 object-cover rounded-[10px] border"
                         />
@@ -582,7 +587,7 @@ const AddProduct = () => {
                         {apiProcessedImages.slice(1).map((img, idx) => (
                           <div key={idx} className="relative w-24 h-24">
                             <img
-                              src={img.url || img}
+                              src={img.displayUrl || img.original_api_url || img.url || img}
                               alt="processed"
                               className="w-full h-full object-cover rounded-[10px] border"
                             />

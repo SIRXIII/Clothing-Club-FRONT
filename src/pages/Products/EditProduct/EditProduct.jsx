@@ -202,10 +202,13 @@ const EditProduct = () => {
       });
 
       if (response.data && response.data.success && response.data.processed_image) {
+        // Use original_api_url for display as it's on CDN and publicly accessible
+        const displayUrl = response.data.processed_image.original_api_url || response.data.processed_image.url;
+        
         // Add processed image to existing images
         const newImage = {
           id: Date.now(),
-          image_url: response.data.processed_image.url,
+          image_url: displayUrl,
           is_primary: images.length === 0,
           enhanced: true, // Mark as enhanced
         };
