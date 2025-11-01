@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import API from "../../../services/api";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Video from "../../../assets/SVG/video.svg";
+import Upload from "../../../assets/SVG/upload.svg";
 import BasicInfo from "./BasicInfo";
 import RentalDetails from "./RentalDetails";
 import Location from "./Location";
@@ -27,6 +28,11 @@ const EditProduct = () => {
   const [error, setError] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  // Image upload method states
+  const [imageUploadMethod, setImageUploadMethod] = useState("local");
+  const [apiProcessedImages, setApiProcessedImages] = useState([]);
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
 
   const navigate = useNavigate();
   const [productData, setProductData] = useState({
@@ -58,6 +64,7 @@ const EditProduct = () => {
     status: "",
     note: "",
     sizeUnit: "",
+    gender: "Female",
   });
 
   useEffect(() => {
@@ -96,6 +103,7 @@ const EditProduct = () => {
           status: product.product_availibity || "",
           note: product.note || "",
           sizeUnit: product.unit || "",
+          gender: product.gender || "Female",
         });
 
         const sortedImages = (product.images || []).sort(
@@ -174,6 +182,52 @@ const EditProduct = () => {
 
       return updated;
     });
+  };
+
+  // Handle API Image Upload
+  const handleApiImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsProcessingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('gender', productData.gender || 'Female');
+      formData.append('product_id', productId); // Link directly to this product
+      
+      const response = await API.post('/products/process-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (response.data && response.data.success && response.data.processed_image) {
+        // Add processed image to existing images
+        const newImage = {
+          id: Date.now(),
+          image_url: response.data.processed_image.url,
+          is_primary: images.length === 0,
+          enhanced: true, // Mark as enhanced
+        };
+
+        setImages((prev) => {
+          const updated = [...prev, newImage];
+          if (!mainImage && newImage.is_primary) {
+            setMainImage(newImage.image_url);
+          }
+          return updated;
+        });
+
+        setApiProcessedImages((prev) => [...prev, response.data.processed_image]);
+        showSuccess('✨ Your image has been enhanced and added successfully!');
+      }
+    } catch (error) {
+      handleApiError(error);
+      console.error('Image processing failed:', error);
+    } finally {
+      setIsProcessingImage(false);
+      e.target.value = null;
+    }
   };
 
   const handleVideoUpload = (e) => {
@@ -286,7 +340,35 @@ const EditProduct = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-6">
 
-              <h3 className="fw5 text-[16px] text-[#232323]">Product Images</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="fw5 text-[16px] text-[#232323]">Product Images</h3>
+                
+                {/* Toggle between Local and Enhanced upload */}
+                <div className="flex gap-2 text-xs fw6">
+                  <button
+                    type="button"
+                    onClick={() => setImageUploadMethod("local")}
+                    className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                      imageUploadMethod === "local"
+                        ? "bg-[#F77F00] text-white border-[#F77F00]"
+                        : "bg-[#FFF5EC] text-[#F77F00] border-transparent hover:bg-[#F77F00] hover:text-white"
+                    }`}
+                  >
+                    Direct Upload
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setImageUploadMethod("api")}
+                    className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                      imageUploadMethod === "api"
+                        ? "bg-[#F77F00] text-white border-[#F77F00]"
+                        : "bg-[#FFF5EC] text-[#F77F00] border-transparent hover:bg-[#F77F00] hover:text-white"
+                    }`}
+                  >
+                    Enhanced Quality
+                  </button>
+                </div>
+              </div>
 
               {mainImage ? (
                 <div className="relative w-full h-60">
@@ -331,6 +413,11 @@ const EditProduct = () => {
                         className="w-full h-full object-cover rounded-[10px] border cursor-pointer hover:opacity-90 transition-opacity"
                         onClick={() => handleImageClick(img.image_url)}
                       />
+                      {img.enhanced && (
+                        <div className="absolute top-1 left-1 bg-green-500 text-white text-[8px] px-1 rounded">
+                          ✨
+                        </div>
+                      )}
                       <button
                         onClick={() => handleRemoveImage(img.image_url, img?.id)}
                         type="button"
@@ -341,17 +428,44 @@ const EditProduct = () => {
                     </div>
                   ))}
 
-                <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed border-[#D9D9D9] rounded-[10px] cursor-pointer hover:bg-gray-100 transition">
-                  +
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleAddImage}
-                  />
-                </label>
+                {imageUploadMethod === "local" ? (
+                  <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed border-[#D9D9D9] rounded-[10px] cursor-pointer hover:bg-gray-100 transition">
+                    +
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAddImage}
+                    />
+                  </label>
+                ) : (
+                  <label className="w-24 h-24 flex flex-col items-center justify-center border-2 border-dashed border-green-400 rounded-[10px] cursor-pointer hover:bg-green-50 transition relative">
+                    {isProcessingImage ? (
+                      <div className="animate-spin rounded-full h-6 w-6 border-2 border-green-500 border-t-transparent"></div>
+                    ) : (
+                      <>
+                        <span className="text-lg">✨</span>
+                        <span className="text-[10px] text-green-600 fw6">Enhance</span>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleApiImageUpload}
+                      disabled={isProcessingImage}
+                    />
+                  </label>
+                )}
               </div>
+
+              {isProcessingImage && imageUploadMethod === "api" && (
+                <div className="flex items-center justify-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-600 border-t-transparent"></div>
+                  <span>Enhancing your image...</span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-6">

@@ -129,6 +129,12 @@ const AddProduct = () => {
   const [errors, setErrors] = useState({});
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const navigate = useNavigate();
+  
+  // Image upload method states
+  const [imageUploadMethod, setImageUploadMethod] = useState("local"); // "local" or "api"
+  const [apiImageFile, setApiImageFile] = useState(null);
+  const [apiProcessedImages, setApiProcessedImages] = useState([]);
+  const [isProcessingImage, setIsProcessingImage] = useState(false);
 
   const [productData, setProductData] = useState({
     productname: "",
@@ -158,6 +164,7 @@ const AddProduct = () => {
     coditionGrade: "",
     status: "",
     note: "",
+    gender: "Female", // For AI image processing
   });
 
   const handleChange = (e) => {
@@ -179,6 +186,42 @@ const AddProduct = () => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Handle API Image Upload
+  const handleApiImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setApiImageFile(file);
+    setIsProcessingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('gender', productData.gender || 'Female'); // Use selected gender from product data
+      
+      // Call backend API endpoint
+      const response = await API.post('/products/process-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      // Backend returns processed image URL and metadata
+      if (response.data && response.data.success && response.data.processed_image) {
+        setApiProcessedImages((prev) => [...prev, response.data.processed_image]);
+        showSuccess('✨ Your image has been enhanced successfully!');
+      }
+    } catch (error) {
+      handleApiError(error);
+      console.error('Image processing failed:', error);
+    } finally {
+      setIsProcessingImage(false);
+      e.target.value = null;
+    }
+  };
+
+  const handleRemoveApiImage = (index) => {
+    setApiProcessedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -189,9 +232,15 @@ const AddProduct = () => {
         formData.append(key, value ?? "");
       });
 
-      if (images && images.length > 0) {
+      // Handle images based on upload method
+      if (imageUploadMethod === "local" && images && images.length > 0) {
         images.forEach((file, index) => {
           formData.append(`images[${index}]`, file);
+        });
+      } else if (imageUploadMethod === "api" && apiProcessedImages.length > 0) {
+        // API images are already stored in backend, just send their paths
+        apiProcessedImages.forEach((imageData, index) => {
+          formData.append(`api_image_paths[${index}]`, imageData.path || imageData.url);
         });
       }
 
@@ -236,6 +285,8 @@ const AddProduct = () => {
       });
 
       setImages([]);
+      setApiProcessedImages([]);
+      setApiImageFile(null);
       setVideoFile(null);
       setVideoUrl("");
       setErrors({});
@@ -360,83 +411,217 @@ const AddProduct = () => {
         <div className="bg-white border-color rounded-lg p-4 flex flex-col gap-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-6">
-              <h3 className="fw5 leading-[150%] tracking-[-3%] ">
-                Product Image
-              </h3>
-
-              <div className="w-full">
-                <input
-                  type="file"
-                  id="productImages"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-                {images.length === 0 ? (
-                  <div
-                    className="border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[326px]"
-                    onClick={() =>
-                      document.getElementById("productImages").click()
-                    }
+              <div className="flex items-center justify-between">
+                <h3 className="fw5 leading-[150%] tracking-[-3%]">
+                  Product Image
+                </h3>
+                {/* Toggle between Local and Enhanced upload */}
+                <div className="flex gap-2 text-xs fw6">
+                  <button
+                    type="button"
+                    onClick={() => setImageUploadMethod("local")}
+                    className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                      imageUploadMethod === "local"
+                        ? "bg-[#F77F00] text-white border-[#F77F00]"
+                        : "bg-[#FFF5EC] text-[#F77F00] border-transparent hover:bg-[#F77F00] hover:text-white"
+                    }`}
                   >
-                    <img src={Upload} alt="" className="w-8 h-8 mb-2" />
-                    <p className="text-base fw6 text-[#6C6C6C]">
-                      Upload product images
-                    </p>
-                    <p className="text-xs text-[#9A9A9A]">
-                      Only PNG, JPG allowed.
-                    </p>
-                    <p className="text-xs text-[#9A9A9A]">
-                      500x500 pixels are recommended.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="relative w-full">
-                      <img
-                        src={URL.createObjectURL(images[0])}
-                        alt="main product"
-                        className="w-full h-60 object-cover rounded-[10px] border"
-                      />
-                      <button
-                        onClick={() => setImages([])}
-                        className="absolute -top-2 -right-2 flex items-center justify-center w-[24px] h-[24px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
-                      >
-                        <FaTimes size={12} />
-                      </button>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {images.slice(1).map((img, idx) => (
-                        <div key={idx} className="relative w-24 h-24">
-                          <img
-                            src={URL.createObjectURL(img)}
-                            alt="product"
-                            className="w-full h-full object-cover rounded-[10px] border"
-                          />
-                          <button
-                            onClick={() =>
-                              setImages(images.filter((_, i) => i !== idx + 1))
-                            }
-                            className="absolute -top-2 -right-2 flex items-center justify-center w-[20px] h-[20px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
-                          >
-                            <FaTimes size={10} />
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100"
-                        onClick={() =>
-                          document.getElementById("productImages").click()
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  </>
-                )}
+                    Direct Upload
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setImageUploadMethod("api")}
+                    className={`px-3 py-2 rounded-lg border transition-all duration-200 ${
+                      imageUploadMethod === "api"
+                        ? "bg-[#F77F00] text-white border-[#F77F00]"
+                        : "bg-[#FFF5EC] text-[#F77F00] border-transparent hover:bg-[#F77F00] hover:text-white"
+                    }`}
+                  >
+                    Enhanced Quality
+                  </button>
+                </div>
               </div>
+
+              {imageUploadMethod === "local" ? (
+                // LOCAL UPLOAD METHOD
+                <div className="w-full">
+                  <input
+                    type="file"
+                    id="productImages"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  {images.length === 0 ? (
+                    <div
+                      className="border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[326px]"
+                      onClick={() =>
+                        document.getElementById("productImages").click()
+                      }
+                    >
+                      <img src={Upload} alt="" className="w-8 h-8 mb-2" />
+                      <p className="text-base fw6 text-[#6C6C6C]">
+                        Upload product images
+                      </p>
+                      <p className="text-xs text-[#9A9A9A]">
+                        Only PNG, JPG allowed.
+                      </p>
+                      <p className="text-xs text-[#9A9A9A]">
+                        500x500 pixels are recommended.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative w-full">
+                        <img
+                          src={URL.createObjectURL(images[0])}
+                          alt="main product"
+                          className="w-full h-60 object-cover rounded-[10px] border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setImages([])}
+                          className="absolute -top-2 -right-2 flex items-center justify-center w-[24px] h-[24px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                        >
+                          <FaTimes size={12} />
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {images.slice(1).map((img, idx) => (
+                          <div key={idx} className="relative w-24 h-24">
+                            <img
+                              src={URL.createObjectURL(img)}
+                              alt="product"
+                              className="w-full h-full object-cover rounded-[10px] border"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setImages(images.filter((_, i) => i !== idx + 1))
+                              }
+                              className="absolute -top-2 -right-2 flex items-center justify-center w-[20px] h-[20px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                            >
+                              <FaTimes size={10} />
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100"
+                          onClick={() =>
+                            document.getElementById("productImages").click()
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                // ENHANCED UPLOAD METHOD
+                <div className="w-full flex flex-col gap-4">
+                  <input
+                    type="file"
+                    id="apiProductImage"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleApiImageUpload}
+                    disabled={isProcessingImage}
+                  />
+                  
+                  {apiProcessedImages.length === 0 ? (
+                    <div
+                      className={`border-2 border-dashed border-gray-300 justify-center gap-1 rounded-lg p-6 flex flex-col items-center cursor-pointer h-[326px] ${
+                        isProcessingImage ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      onClick={() =>
+                        !isProcessingImage && document.getElementById("apiProductImage").click()
+                      }
+                    >
+                      <img src={Upload} alt="" className="w-8 h-8 mb-2" />
+                      <p className="text-base fw6 text-[#6C6C6C]">
+                        {isProcessingImage ? 'Enhancing your image...' : 'Want better quality images?'}
+                      </p>
+                      <p className="text-sm text-[#6C6C6C] mt-1 text-center px-4">
+                        {isProcessingImage 
+                          ? 'Please wait while we process your image' 
+                          : 'Upload your product picture here and we\'ll enhance it for you!'}
+                      </p>
+                      <p className="text-xs text-[#9A9A9A] mt-2">
+                        We'll optimize brightness, clarity & background
+                      </p>
+                      <p className="text-xs text-[#9A9A9A]">
+                        Only PNG, JPG allowed
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative w-full">
+                        <img
+                          src={apiProcessedImages[0].url || apiProcessedImages[0]}
+                          alt="processed product"
+                          className="w-full h-60 object-cover rounded-[10px] border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setApiProcessedImages([])}
+                          className="absolute -top-2 -right-2 flex items-center justify-center w-[24px] h-[24px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[12px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                        >
+                          <FaTimes size={12} />
+                        </button>
+                        <div className="absolute top-2 left-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs px-3 py-1.5 rounded-md shadow-sm flex items-center gap-1">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span>Enhanced ✨</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {apiProcessedImages.slice(1).map((img, idx) => (
+                          <div key={idx} className="relative w-24 h-24">
+                            <img
+                              src={img.url || img}
+                              alt="processed"
+                              className="w-full h-full object-cover rounded-[10px] border"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveApiImage(idx + 1)}
+                              className="absolute -top-2 -right-2 flex items-center justify-center w-[20px] h-[20px] rounded-[3.52px] bg-[#FEF2E6] text-[#F77F00] text-[10px] shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]"
+                            >
+                              <FaTimes size={10} />
+                            </button>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          className="w-24 h-24 flex items-center justify-center border-2 border-dashed rounded-[10px] text-2xl text-[#4F4F4F] hover:bg-gray-100"
+                          onClick={() =>
+                            !isProcessingImage && document.getElementById("apiProductImage").click()
+                          }
+                          disabled={isProcessingImage}
+                        >
+                          {isProcessingImage ? '...' : '+'}
+                        </button>
+                      </div>
+                    </>
+                  )}
+
+                  {isProcessingImage && (
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-[#FFF5EC] rounded-lg border border-[#F77F00]/20">
+                      <div className="flex items-center gap-2 text-sm text-[#F77F00]">
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#F77F00] border-t-transparent"></div>
+                        <span className="fw6">Enhancing your image...</span>
+                      </div>
+                      <p className="text-xs text-[#9A9A9A] text-center">
+                        Optimizing quality, removing background & adjusting lighting
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
             </div>
 
@@ -1140,36 +1325,71 @@ const AddProduct = () => {
           <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
             Size And Fit
           </h3>
-          <div>
-            <div className="relative">
-              <Dropdown
-                label=" Fit Type"
-                dropdownClass="w-full gap-4"
-                options={[
-                  "Slim Fit",
-                  "Regular Fit",
-                  "Relaxed Fit",
-                  "Tailored Fit",
-                  "Loose Fit",
-                ]}
-                value={productData.fitType}
-                onChange={(val) =>
-                  setProductData((prev) => ({ ...prev, fitType: val }))
-                }
-                className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
-              />
-              <label
-                htmlFor="fitType"
-                className="absolute text-sm ms-4 text-[#939393] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
-              >
-                Fit Type
-              </label>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <div className="relative">
+                <Dropdown
+                  label=" Gender Category"
+                  dropdownClass="w-full gap-4"
+                  options={[
+                    "Male",
+                    "Female",
+                    "Unisex",
+                  ]}
+                  value={productData.gender}
+                  onChange={(val) =>
+                    setProductData((prev) => ({ ...prev, gender: val }))
+                  }
+                  className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                />
+                <label
+                  htmlFor="gender"
+                  className="absolute text-sm ms-4 text-[#939393] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                  peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
+                >
+                  Gender Category
+                </label>
+              </div>
+              {errors.gender && (
+                <p className="text-red-500 text-sm mt-1">{errors.gender[0]}</p>
+              )}
+              <p className="text-xs text-[#9A9A9A] mt-2">
+                Used for AI image processing model selection
+              </p>
             </div>
 
-            {errors.fitType && (
-              <p className="text-red-500 text-sm mt-1">{errors.fitType[0]}</p>
-            )}
+            <div>
+              <div className="relative">
+                <Dropdown
+                  label=" Fit Type"
+                  dropdownClass="w-full gap-4"
+                  options={[
+                    "Slim Fit",
+                    "Regular Fit",
+                    "Relaxed Fit",
+                    "Tailored Fit",
+                    "Loose Fit",
+                  ]}
+                  value={productData.fitType}
+                  onChange={(val) =>
+                    setProductData((prev) => ({ ...prev, fitType: val }))
+                  }
+                  className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
+                />
+                <label
+                  htmlFor="fitType"
+                  className="absolute text-sm ms-4 text-[#939393] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                  peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
+                >
+                  Fit Type
+                </label>
+              </div>
+
+              {errors.fitType && (
+                <p className="text-red-500 text-sm mt-1">{errors.fitType[0]}</p>
+              )}
+            </div>
           </div>
 
           {/* <div> */}
