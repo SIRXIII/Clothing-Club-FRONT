@@ -172,11 +172,39 @@ const AddProduct = () => {
     gender: "Female", // For AI image processing
   });
 
+  // Sizes state - array of {size: string, quantity: number}
+  const [sizes, setSizes] = useState([]);
+  
+  // Available size options
+  const availableSizes = ["XS", "Small", "Medium", "Large", "XL", "XXL", "XXXL"];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prev) => ({ ...prev, [name]: value }));
 
     setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  // Handle size checkbox toggle
+  const handleSizeToggle = (size) => {
+    setSizes((prev) => {
+      const existing = prev.find((s) => s.size === size);
+      if (existing) {
+        // Remove if already exists
+        return prev.filter((s) => s.size !== size);
+      } else {
+        // Add with default quantity 1
+        return [...prev, { size, quantity: 1 }];
+      }
+    });
+  };
+
+  // Handle quantity change for a size
+  const handleQuantityChange = (size, quantity) => {
+    const numQuantity = parseInt(quantity) || 0;
+    setSizes((prev) =>
+      prev.map((s) => (s.size === size ? { ...s, quantity: numQuantity } : s))
+    );
   };
 
 
@@ -271,6 +299,14 @@ const AddProduct = () => {
         formData.append("video_url", videoUrl);
       }
 
+      // Handle sizes - send as JSON array
+      if (sizes.length > 0) {
+        sizes.forEach((sizeData, index) => {
+          formData.append(`sizes[${index}][size]`, sizeData.size);
+          formData.append(`sizes[${index}][quantity]`, sizeData.quantity);
+        });
+      }
+
       const response = await API.post("/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -310,6 +346,7 @@ const AddProduct = () => {
       setApiImageFile(null);
       setVideoFile(null);
       setVideoUrl("");
+      setSizes([]);
       setErrors({});
 
       showSuccess("Product added successfully!");
@@ -1652,6 +1689,74 @@ const AddProduct = () => {
               Note
             </label>
           </div>
+        </div>
+
+        {/* Sizes Section */}
+        <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
+          <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
+            Product Sizes & Quantities
+          </h3>
+          <p className="text-sm text-[#6C6C6C]">
+            Select the sizes available for this product and specify the quantity for each size.
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {availableSizes.map((size) => {
+              const sizeData = sizes.find((s) => s.size === size);
+              const isChecked = !!sizeData;
+              
+              return (
+                <div
+                  key={size}
+                  className="flex flex-col gap-2 p-4 border border-[#D9D9D9] rounded-lg hover:border-[#F77F00] transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={`size-${size}`}
+                      checked={isChecked}
+                      onChange={() => handleSizeToggle(size)}
+                      className="w-4 h-4 text-[#F77F00] border-[#D9D9D9] rounded focus:ring-[#F77F00] focus:ring-2"
+                    />
+                    <label
+                      htmlFor={`size-${size}`}
+                      className="text-sm font-medium text-[#232323] cursor-pointer"
+                    >
+                      {size}
+                    </label>
+                  </div>
+                  
+                  {isChecked && (
+                    <div className="mt-2">
+                      <label
+                        htmlFor={`quantity-${size}`}
+                        className="block text-xs text-[#6C6C6C] mb-1"
+                      >
+                        Quantity
+                      </label>
+                      <input
+                        type="number"
+                        id={`quantity-${size}`}
+                        min="0"
+                        value={sizeData.quantity}
+                        onChange={(e) =>
+                          handleQuantityChange(size, e.target.value)
+                        }
+                        className="w-full p-2 text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#F77F00]"
+                        placeholder="0"
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          
+          {sizes.length === 0 && (
+            <p className="text-sm text-[#6C6C6C] italic">
+              No sizes selected. Please select at least one size for your product.
+            </p>
+          )}
         </div>
 
         <div className="relative bottom-0 left-0 right-0 bg-[#FFFFFF]  px-6 py-6 flex justify-end gap-3">

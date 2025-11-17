@@ -11,10 +11,12 @@ const echo = new Echo({
   wssPort: import.meta.env.VITE_REVERB_PORT,
   forceTLS: false,
   enabledTransports: ["ws", "wss"],
-  authEndpoint: "https://travelclothingclub-partner.com/broadcasting/auth",
+  authEndpoint: `${import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api'}/broadcasting/auth`,
   auth: {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      get Authorization() {
+        return `Bearer ${localStorage.getItem("auth_token")}`;
+      },
     },
   },
 });

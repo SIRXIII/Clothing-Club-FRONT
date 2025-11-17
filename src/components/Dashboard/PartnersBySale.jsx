@@ -33,7 +33,7 @@ const PartnersBySale = () => {
         </thead>
         <tbody className="text-sm  leading-[150%] tracking-[-3%] items-center bg-[#FFFFFF]">
           {topPartners.map((t) => (
-            <tr key={t.id} onClick={() => navigate(`/partners/profile/${t.id}`)} className="text-sm bg-[#FFFFFF] hover:bg-[#FEF2E6] cursor-pointer transition-colors">
+            <tr key={t.id} onClick={() => navigate(`/profile/${t.id}`)} className="text-sm bg-[#FFFFFF] hover:bg-[#FEF2E6] cursor-pointer transition-colors">
               <td className="p-4 flex items-center gap-3">
                 <div><img src={t.profile_photo} alt="adasda" className="w-6 h-6 object-cover object-center rounded-full" onError={(e) => {e.currentTarget.src = DefaultProfile;}}/></div>
                 <div>
