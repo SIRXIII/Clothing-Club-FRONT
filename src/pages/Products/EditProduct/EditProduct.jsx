@@ -500,7 +500,7 @@ const EditProduct = () => {
                         }`}
                       >
                         {genderOption} Model
-                      </button>
+                      </button> 
                     ))}
                   </div>
                   <p className="text-xs text-[#9A9A9A]">
