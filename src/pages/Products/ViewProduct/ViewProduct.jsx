@@ -21,7 +21,6 @@ const ViewProduct = () => {
   const [error, setError] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [sizes, setSizes] = useState([]);
 
   const [productData, setProductData] = useState({
     productname: "",
@@ -58,10 +57,8 @@ const ViewProduct = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await API.get(`products/${productId}`);
-        const product = response.data?.data || response.data || {};
-        console.log('Full API response:', response.data); // Debug log
-        console.log('Product object:', product); // Debug log
+        const { data } = await API.get(`products/${productId}`);
+        const product = data.data || {};
 
         setProductData({
           productname: product.name || "",
@@ -107,20 +104,6 @@ const ViewProduct = () => {
 
         const firstVideo = product.videos?.[0] || {};
         setVideoUrl(firstVideo.video_url || firstVideo.video_path || "");
-
-        // Load sizes data
-        console.log('Product sizes:', product.sizes); // Debug log
-        if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
-          const sizesData = product.sizes.map((size) => ({
-            size: size.size,
-            quantity: size.quantity || 0,
-          }));
-          setSizes(sizesData);
-          console.log('Sizes loaded:', sizesData); // Debug log
-        } else {
-          setSizes([]);
-          console.log('No sizes found or empty array'); // Debug log
-        }
       } catch {
         setError("Failed to load product data.");
       } finally {
@@ -269,40 +252,6 @@ const ViewProduct = () => {
         setProductData={setProductData}
         viewMode={true}
       />
-
-      {/* Sizes Section - View Only */}
-      <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
-        <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
-          Product Sizes & Quantities
-        </h3>
-        
-        {sizes.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {sizes.map((sizeData) => (
-              <div
-                key={sizeData.size}
-                className="flex flex-col gap-2 p-4 border border-[#D9D9D9] rounded-lg"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-[#232323]">
-                    {sizeData.size}
-                  </span>
-                </div>
-                <div className="mt-2">
-                  <span className="text-xs text-[#6C6C6C]">Quantity: </span>
-                  <span className="text-sm font-medium text-[#232323]">
-                    {sizeData.quantity}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-[#6C6C6C] italic">
-            No sizes available for this product.
-          </p>
-        )}
-      </div>
 
       {/* No action buttons in view mode */}
       <div className="bg-[#FFFFFF] px-6 py-6 flex justify-end gap-3">
