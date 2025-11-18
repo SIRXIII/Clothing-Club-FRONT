@@ -21,6 +21,7 @@ const ViewProduct = () => {
   const [error, setError] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [sizes, setSizes] = useState([]);
 
   const [productData, setProductData] = useState({
     productname: "",
@@ -104,6 +105,16 @@ const ViewProduct = () => {
 
         const firstVideo = product.videos?.[0] || {};
         setVideoUrl(firstVideo.video_url || firstVideo.video_path || "");
+
+        // Load product sizes
+        if (product.sizes && Array.isArray(product.sizes)) {
+          setSizes(product.sizes.map((size) => ({
+            size: size.size,
+            quantity: size.quantity || 0,
+          })));
+        } else {
+          setSizes([]);
+        }
       } catch {
         setError("Failed to load product data.");
       } finally {
@@ -246,12 +257,57 @@ const ViewProduct = () => {
         setProductData={setProductData}
         viewMode={true}
       />
+
       <Condition
         productData={productData}
         handleChange={handleChange}
         setProductData={setProductData}
         viewMode={true}
       />
+
+      <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
+        <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
+          Product Sizes & Quantities
+        </h3>
+        <p className="text-sm text-[#6C6C6C]">
+          Available sizes and their quantities for this product.
+        </p>
+        
+        {sizes.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {sizes.map((sizeData) => (
+              <div
+                key={sizeData.size}
+                className="flex flex-col gap-2 p-4 border border-[#D9D9D9] rounded-lg bg-gray-50"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-[#F77F00] rounded bg-[#F77F00] flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <label className="text-sm font-medium text-[#232323]">
+                    {sizeData.size}
+                  </label>
+                </div>
+                
+                <div className="mt-2">
+                  <label className="block text-xs text-[#6C6C6C] mb-1">
+                    Quantity
+                  </label>
+                  <div className="w-full p-2 text-sm text-[#121212] bg-white rounded-lg border border-[#D9D9D9]">
+                    {sizeData.quantity}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-[#6C6C6C] italic">
+            No sizes available for this product.
+          </p>
+        )}
+      </div>
 
       {/* No action buttons in view mode */}
       <div className="bg-[#FFFFFF] px-6 py-6 flex justify-end gap-3">
