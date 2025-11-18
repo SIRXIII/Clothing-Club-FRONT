@@ -207,6 +207,27 @@ const AddProduct = () => {
     );
   };
 
+  // Helper function to convert number to "$10/day" format for display
+  const formatExtensionPrice = (value) => {
+    if (!value) return "";
+    // If already in "$10/day" format, return as is
+    if (value.includes("$") && value.includes("/day")) {
+      return value;
+    }
+    // If it's a number, convert to "$10/day" format
+    const num = parseFloat(value);
+    if (!isNaN(num)) {
+      return `$${num}/day`;
+    }
+    return value;
+  };
+
+  // Helper function to get extension price display value
+  const getExtensionPriceDisplayValue = () => {
+    if (!productData.extensionPrice) return "";
+    return formatExtensionPrice(productData.extensionPrice);
+  };
+
 
 
   const handleFileChange = (e) => {
@@ -277,8 +298,22 @@ const AddProduct = () => {
     try {
       const formData = new FormData();
 
+      // Clean extensionPrice - extract only number if it contains "$" or "/day"
+      let cleanedExtensionPrice = '';
+      if (productData.extensionPrice) {
+        // Remove all non-numeric characters except decimal point
+        const numericString = productData.extensionPrice.toString().replace(/[^0-9.]/g, '');
+        const num = parseFloat(numericString);
+        cleanedExtensionPrice = isNaN(num) ? '' : num.toString();
+      }
+
       Object.entries(productData).forEach(([key, value]) => {
-        formData.append(key, value ?? "");
+        // Override extensionPrice with cleaned numeric value
+        if (key === 'extensionPrice') {
+          formData.append(key, cleanedExtensionPrice);
+        } else {
+          formData.append(key, value ?? "");
+        }
       });
 
       // Handle images based on upload method
@@ -1011,10 +1046,19 @@ const AddProduct = () => {
                     "$20/day",
                     "$25/day",
                   ]}
-                  value={productData.extensionPrice}
-                  onChange={(val) =>
-                    setProductData((prev) => ({ ...prev, extensionPrice: val }))
-                  }
+                  value={getExtensionPriceDisplayValue()}
+                  onChange={(val) => {
+                    // Extract number from "$10/day" format - extract only the number
+                    let numericValue = '';
+                    if (val) {
+                      // Remove all non-numeric characters except decimal point
+                      numericValue = val.replace(/[^0-9.]/g, '');
+                      // Ensure it's a valid number
+                      const num = parseFloat(numericValue);
+                      numericValue = isNaN(num) ? '' : num.toString();
+                    }
+                    setProductData((prev) => ({ ...prev, extensionPrice: numericValue }));
+                  }}
                   className="block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
                 />
                 <label

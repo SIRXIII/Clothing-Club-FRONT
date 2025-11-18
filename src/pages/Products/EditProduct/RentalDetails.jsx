@@ -42,10 +42,19 @@ const RentalDetails = ({ productData, handleChange, viewMode = false }) => {
               label=" Extension Price"
               dropdownClass="w-full gap-4"
               options={["$10/day", "$15/day", "$18/day", "$20/day", "$25/day"]}
-              value={productData.extensionPrice}
-              onChange={(val) =>
-                handleChange({ target: { name: "extensionPrice", value: val } })
-              }
+              value={productData.extensionPrice ? (productData.extensionPrice.includes("$") ? productData.extensionPrice : `$${productData.extensionPrice}/day`) : ""}
+              onChange={(val) => {
+                // Extract number from "$10/day" format - extract only the number
+                let numericValue = '';
+                if (val) {
+                  // Remove all non-numeric characters except decimal point
+                  numericValue = val.replace(/[^0-9.]/g, '');
+                  // Ensure it's a valid number
+                  const num = parseFloat(numericValue);
+                  numericValue = isNaN(num) ? '' : num.toString();
+                }
+                handleChange({ target: { name: "extensionPrice", value: numericValue } });
+              }}
               disabled={viewMode}
               className={`block p-4 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-lg border border-[#D9D9D9] appearance-none focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer ${viewMode ? 'bg-gray-50 cursor-not-allowed' : ''}`}
             />

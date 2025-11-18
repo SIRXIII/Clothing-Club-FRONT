@@ -270,8 +270,22 @@ const EditProduct = () => {
       setSaving(true);
       setError("");
       const formData = new FormData();
+      
+      // Clean extensionPrice - extract only number if it contains "$" or "/day"
+      let cleanedExtensionPrice = '';
+      if (productData.extensionPrice) {
+        const numericString = productData.extensionPrice.toString().replace(/[^0-9.]/g, '');
+        const num = parseFloat(numericString);
+        cleanedExtensionPrice = isNaN(num) ? '' : num.toString();
+      }
+      
       for (const [key, value] of Object.entries(productData)) {
-        formData.append(key, value ?? "");
+        // Override extensionPrice with cleaned numeric value
+        if (key === 'extensionPrice') {
+          formData.append(key, cleanedExtensionPrice);
+        } else {
+          formData.append(key, value ?? "");
+        }
       }
       if (videoFile) formData.append("video_file", videoFile);
       else if (videoUrl) formData.append("video_url", videoUrl);
