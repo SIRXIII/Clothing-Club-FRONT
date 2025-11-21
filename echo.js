@@ -11,7 +11,7 @@ const echo = new Echo({
   wssPort: import.meta.env.VITE_REVERB_PORT,
   forceTLS: false,
   enabledTransports: ["ws", "wss"],
-  authEndpoint: `${import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api'}/broadcasting/auth`,
+  authEndpoint: 'https://travelclothingclub-partner.online/broadcasting/auth',
   auth: {
     headers: {
       get Authorization() {
