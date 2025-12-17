@@ -884,7 +884,7 @@ const AddProduct = () => {
                   name="color"
                   value={productData.color}
                   onChange={handleChange}
-                  placeholder="#000000"
+                  placeholder="Color"
                   className="block p-4 pr-14 pt-4 w-full text-sm text-[#121212] bg-transparent rounded-xl border border-[#D9D9D9] focus:outline-none focus:ring-0 focus:border-[#D9D9D9] peer"
                 />
 
@@ -898,14 +898,14 @@ const AddProduct = () => {
                   Color
                 </label>
 
-                <input
+                {/* <input
                   type="color"
                   id="colorPicker"
                   name="color"
                   value={productData.color}
                   onChange={handleChange}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 cursor-pointer border border-[#D9D9D9] rounded-full bg-transparent"
-                />
+                /> */}
               </div>
               {errors.color && (
                 <p className="text-red-500 text-sm mt-1">{errors.color[0]}</p>
