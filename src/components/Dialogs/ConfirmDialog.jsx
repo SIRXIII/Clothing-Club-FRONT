@@ -1,11 +1,11 @@
 import React from "react";
 
-const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
+const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel, actionLabel }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-40 z-50">
-      <div className="bg-white p-6 rounded-xl shadow-lg w-[350px] text-center">
+      <div className="bg-white p-6 rounded-xl shadow-lg w-[450px] text-center">
         <h2 className="text-lg font-semibold mb-3">
           {title || "Are you sure?"}
         </h2>
@@ -23,7 +23,7 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel }) => {
             onClick={onConfirm}
             className="px-4 py-2 rounded-lg bg-orange text-white hover:bg-red-600"
           >
-            Yes, Delete
+           {actionLabel ?? "Yes, Delete"}
           </button>
         </div>
       </div>

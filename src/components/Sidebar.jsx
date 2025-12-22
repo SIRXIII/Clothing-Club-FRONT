@@ -36,6 +36,12 @@ const navLinks = [
         label: "Refund",
         link: "/refund",
       },
+      {
+        icon: refund,
+        iconActive: refundwhite,
+        label: "Returns",
+        link: "/returns",
+      },
     ],
   },
   {

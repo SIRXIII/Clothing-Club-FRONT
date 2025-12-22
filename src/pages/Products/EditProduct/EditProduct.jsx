@@ -685,6 +685,7 @@ const EditProduct = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {availableSizes.map((size) => {
+              console.log("availableSize", availableSizes, sizes);
               const sizeData = sizes.find((s) => s.size === size);
               const isChecked = !!sizeData;
               
