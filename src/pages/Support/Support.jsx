@@ -20,6 +20,12 @@ const Support = () => {
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
   
   const currentUser = JSON.parse(localStorage.getItem("auth_user"));
+  const userType = localStorage.getItem("type");
+  
+  // Clothing-Club-FRONT: Partner/Traveler website or mobile - use Firestore
+  const isWebsiteUser = userType === 'admin' || userType === 'Admin' || 
+                        currentUser?.type === 'admin' || currentUser?.type === 'Admin';
+  const isMobileUser = !isWebsiteUser; // All non-admin users use Firestore
 
   // Fetch tickets
   useEffect(() => {
@@ -40,9 +46,9 @@ const Support = () => {
     fetchTickets();
   }, []);
 
-  // Listen to Firebase conversations for realtime updates and unread badges
+  // Listen to Firebase conversations for realtime updates and unread badges (only for mobile users)
   useEffect(() => {
-    if (!currentUser?.id) return;
+    if (!isMobileUser || !currentUser?.id) return;
 
     const userId = currentUser.id.toString();
     const unsubscribe = listenConversations(userId, (conversations) => {
@@ -50,7 +56,7 @@ const Support = () => {
     });
 
     return () => unsubscribe();
-  }, [currentUser?.id]);
+  }, [currentUser?.id, isMobileUser]);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -107,8 +113,13 @@ const Support = () => {
   );
 
   // Filter + sort tickets
-  // Merge API tickets with Firebase conversation data (unread counts)
+  // Merge API tickets with Firebase conversation data (unread counts) - only for mobile users
   const mergedTickets = useMemo(() => {
+    if (!isMobileUser) {
+      // For website users, return tickets as-is (no Firebase data)
+      return supportTickets;
+    }
+    
     return supportTickets.map(ticket => {
       const firebaseConv = firebaseConversations.find(conv => conv.id === ticket.id?.toString());
       return {
@@ -118,7 +129,7 @@ const Support = () => {
         lastMessageTime: firebaseConv?.lastMessageTime || (ticket.created_at ? new Date(ticket.created_at).getTime() : 0)
       };
     });
-  }, [supportTickets, firebaseConversations]);
+  }, [supportTickets, firebaseConversations, isMobileUser]);
 
   const filteredTickets = useMemo(() => {
     let result = mergedTickets.filter((t) => {
