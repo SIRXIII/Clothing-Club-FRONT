@@ -429,8 +429,8 @@ const Refunds = () => {
 
     {/* Chat Support Modal */}
     {showChatModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
+      <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowChatModal(false)}>
+        <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-[#232323]">Chat Support</h3>
             <button
@@ -464,7 +464,7 @@ const Refunds = () => {
               </button>
             )}
 
-            {selectedOrder?.rider_name && (
+            {(selectedOrder?.rider_name || selectedOrder?.rider) && (
               <button
                 onClick={handleChatWithRider}
                 className="flex items-center justify-between p-4 border-2 border-[#F77F00] rounded-lg hover:bg-[#FEF2E6] transition"
@@ -475,14 +475,14 @@ const Refunds = () => {
                   </div>
                   <div className="text-left">
                     <p className="font-semibold text-[#232323]">Chat with Rider</p>
-                    <p className="text-sm text-gray-500">{selectedOrder.rider_name || 'Rider'}</p>
+                    <p className="text-sm text-gray-500">{selectedOrder.rider_name || selectedOrder.rider?.name || 'Rider'}</p>
                   </div>
                 </div>
                 <FiChevronDown className="transform -rotate-90 text-[#F77F00]" />
               </button>
             )}
 
-            {!selectedOrder?.traveler_name && !selectedOrder?.rider_name && (
+            {!selectedOrder?.traveler_name && !selectedOrder?.rider_name && !selectedOrder?.rider && (
               <p className="text-sm text-gray-500 text-center py-4">
                 No traveler or rider available for this order
               </p>
