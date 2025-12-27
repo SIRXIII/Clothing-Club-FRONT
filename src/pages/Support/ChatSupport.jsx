@@ -12,6 +12,7 @@ const ChatSupport = () => {
   const ticketId = id;
   const currentUser = JSON.parse(localStorage.getItem("auth_user"));
   const userType = localStorage.getItem("type");
+  const user = localStorage.getItem("auth_user");
 
   const [messages, setMessages] = useState([]);
   const [ticket, setTicket] = useState([]);
@@ -20,7 +21,7 @@ const ChatSupport = () => {
 
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState("In Progress");
-  const options = ["In Progress", "Rejected", "Pending"];
+  const options = ['Pending', 'Resolved', 'In Progress'];
 
   const handleSelect = async (option) => {
     setStatus(option);
