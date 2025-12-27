@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { FiArrowDown, FiArrowUp, FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
+import { FiArrowDown, FiArrowUp, FiChevronDown, FiMoreHorizontal, FiX } from "react-icons/fi";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import DefaultProfile from "../../assets/Images/trv_profile.jpg";
 import Pagination from "../../components/Pagination";
 import { useRefunds } from "../../hooks/useRefund";
@@ -23,6 +24,9 @@ const Refunds = () => {
   const [perPage, setPerPage] = useState(10);
   const [openActionId, setOpenActionId] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const statusColors = {
     Pending: "bg-[#E1FDFD] text-[#3E77B0]",
@@ -129,26 +133,60 @@ const Refunds = () => {
   );
 
 
-  const handleSupportClick = async (orderId) => {
+  const handleSupportClick = (orderId, order) => {
+    setSelectedOrderId(orderId);
+    setSelectedOrder(order);
+    setShowChatModal(true);
+    setOpenActionId(null); // Close action menu
+  };
 
-    console.log("orderId", orderId);
-  try {
-    const res = await API.post("/support/check-or-create", {
-      order_id: orderId,
-    });
+  const handleChatWithTraveler = async () => {
+    if (!selectedOrderId) return;
+    
+    try {
+      const res = await API.post("/support/check-or-create", {
+        order_id: selectedOrderId,
+      });
 
+      console.log("Support chat response:", res.data);
+      if (res.data.status === "created") {
+        toast.success("Chat with Traveler started!");
+      } else {
+        toast.success("Opening chat with Traveler");
+      }
 
-    console.log("Support chat response:", res.data);
-    if (res.data.status === "created") {
-      toast.success("New support ticket created!");
+      setShowChatModal(false);
+      const ticketId = res.data?.data?.ticket_id || res.data?.data?.id || res.data?.ticket_id || res.data?.id;
+      navigate(`/support/chatsupport/${ticketId}?participant=traveler`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to open chat with Traveler");
     }
+  };
 
-    navigate(`/support/chatsupport/${res.data.data.ticket_id}`);
-  } catch (error) {
-    console.error(error);
-    toast.error("Unable to open support chat");
-  }
-};
+  const handleChatWithRider = async () => {
+    if (!selectedOrderId) return;
+    
+    try {
+      const res = await API.post("/support/check-or-create", {
+        order_id: selectedOrderId,
+      });
+
+      console.log("Support chat response:", res.data);
+      if (res.data.status === "created") {
+        toast.success("Chat with Rider started!");
+      } else {
+        toast.success("Opening chat with Rider");
+      }
+
+      setShowChatModal(false);
+      const ticketId = res.data?.data?.ticket_id || res.data?.data?.id || res.data?.ticket_id || res.data?.id;
+      navigate(`/support/chatsupport/${ticketId}?participant=rider`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to open chat with Rider");
+    }
+  };
 
 
  return (
@@ -312,7 +350,7 @@ const Refunds = () => {
                             </button>
                             <button
                               className="px-4 py-2 hover:bg-[#FEF2E6] w-full text-left text-sm"
-                              onClick={() => handleSupportClick(r.order.id)}
+                              onClick={() => handleSupportClick(r.order.id, r.order)}
                             >
                               Chat Support
                             </button>
@@ -363,7 +401,7 @@ const Refunds = () => {
                     className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#F77F00] bg-[#FEF2E6] text-[#F77F00] hover:bg-[#f9dbbe] transition"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleSupportClick(r.order.id);
+                      handleSupportClick(r.order.id, r.order);
                     }}
                   >
                     Chat Support
@@ -388,6 +426,78 @@ const Refunds = () => {
         </>
       )}
     </div>
+
+    {/* Chat Support Modal */}
+    {showChatModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-xl">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold text-[#232323]">Chat Support</h3>
+            <button
+              onClick={() => setShowChatModal(false)}
+              className="text-gray-400 hover:text-gray-600 transition"
+            >
+              <FiX size={24} />
+            </button>
+          </div>
+          
+          <p className="text-sm text-gray-600 mb-4">
+            Select who you want to chat with:
+          </p>
+
+          <div className="flex flex-col gap-3">
+            {selectedOrder?.traveler_name && (
+              <button
+                onClick={handleChatWithTraveler}
+                className="flex items-center justify-between p-4 border-2 border-[#F77F00] rounded-lg hover:bg-[#FEF2E6] transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FEF2E6] flex items-center justify-center">
+                    <span className="text-[#F77F00] font-semibold">T</span>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-[#232323]">Chat with Traveler</p>
+                    <p className="text-sm text-gray-500">{selectedOrder.traveler_name}</p>
+                  </div>
+                </div>
+                <FiChevronDown className="transform -rotate-90 text-[#F77F00]" />
+              </button>
+            )}
+
+            {selectedOrder?.rider_name && (
+              <button
+                onClick={handleChatWithRider}
+                className="flex items-center justify-between p-4 border-2 border-[#F77F00] rounded-lg hover:bg-[#FEF2E6] transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FEF2E6] flex items-center justify-center">
+                    <span className="text-[#F77F00] font-semibold">R</span>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-[#232323]">Chat with Rider</p>
+                    <p className="text-sm text-gray-500">{selectedOrder.rider_name || 'Rider'}</p>
+                  </div>
+                </div>
+                <FiChevronDown className="transform -rotate-90 text-[#F77F00]" />
+              </button>
+            )}
+
+            {!selectedOrder?.traveler_name && !selectedOrder?.rider_name && (
+              <p className="text-sm text-gray-500 text-center py-4">
+                No traveler or rider available for this order
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={() => setShowChatModal(false)}
+            className="mt-4 w-full px-4 py-2 text-gray-600 hover:text-gray-800 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
   </div>
 );
 
