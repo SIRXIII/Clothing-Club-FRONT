@@ -9,8 +9,8 @@ const echo = new Echo({
   cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
   forceTLS: true,
 
-  // authEndpoint: `${import.meta.env.VITE_API_URL}/broadcasting/auth`,
-  authEndpoint: "http://clothing-club-back.test/broadcasting/auth",
+  authEndpoint: "https://travelclothingclub-partner.com/broadcasting/auth",
+  // authEndpoint: "http://clothing-club-back.test/broadcasting/auth",
 
   auth: {
     withCredentials: true,
