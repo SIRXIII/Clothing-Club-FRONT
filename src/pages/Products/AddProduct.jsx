@@ -1326,13 +1326,16 @@ const AddProduct = () => {
             <div>
               <div className="relative">
                 <Dropdown
-                  label=" Location"
+                  label=" City / Location"
                   dropdownClass="w-full gap-4"
                   options={[
-                    "Barcelona Flagship",
-                    "Madrid Central Store",
-                    "Paris Boutique",
-                    "London Showroom",
+                    "Barcelona",
+                    "Madrid",
+                    "Paris",
+                    "London",
+                    "New York",
+                    "Tokyo",
+                    "Dubai",
                   ]}
                   value={productData.location}
                   onChange={(val) =>
@@ -1342,16 +1345,18 @@ const AddProduct = () => {
                 />
                 <label
                   htmlFor="location"
-                  className="absolute text-sm ms-4 text-[#939393] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
-                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#232323]"
+                  className="absolute text-sm ms-4 text-[#F77F00] duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-[#F77F00]"
                 >
-                  Location
+                  City / Location <span className="text-red-500">*</span>
                 </label>
               </div>
 
-
               {errors.location && (
                 <p className="text-red-500 text-sm mt-1">{errors.location[0]}</p>
+              )}
+              {!productData.location && (
+                <p className="text-xs text-[#F77F00] mt-1">⚠️ Required field</p>
               )}
             </div>
 
