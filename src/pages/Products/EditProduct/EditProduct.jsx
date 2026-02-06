@@ -67,6 +67,8 @@ const EditProduct = () => {
     coditionGrade: "",
     status: "",
     note: "",
+    productType: "", // Business, Vacation, Gala, Casual, Resort, Other
+    clothCategory: "", // Tops, Bottoms, Dresses, Outerwear, etc
     sizeUnit: "",
     gender: "Female",
   });
@@ -106,6 +108,8 @@ const EditProduct = () => {
           coditionGrade: product.condition_grade || "",
           status: product.product_availibity || "",
           note: product.note || "",
+          productType: product.type || "", // Map 'type' field from backend
+          clothCategory: product.cloth_category || "",
           sizeUnit: product.unit || "",
           gender: product.gender || "Female",
         });
