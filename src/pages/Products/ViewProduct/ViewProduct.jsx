@@ -51,6 +51,8 @@ const ViewProduct = () => {
     coditionGrade: "",
     status: "",
     note: "",
+    productType: "", // Product Type (Rental, Formal, etc.)
+    clothCategory: "", // Cloth Category (Business, Vacation, etc.)
     sizeUnit: "",
   });
 
@@ -89,9 +91,10 @@ const ViewProduct = () => {
           coditionGrade: product.condition_grade || "",
           status: product.product_availibity || "",
           note: product.note || "",
+          productType: product.type || "",
+          clothCategory: product.cloth_category || "",
           sizeUnit: product.unit || "",
         });
-
         const sortedImages = (product.images || []).sort(
           (a, b) => b.is_primary - a.is_primary
         );
