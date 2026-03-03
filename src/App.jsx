@@ -24,6 +24,7 @@ import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import ViewProduct from "./pages/Products/ViewProduct/ViewProduct";
 import AddProduct from "./pages/Products/AddProduct";
 import Returns from "./pages/Returns/Returns";
+import StripePayments from "./pages/StripePayments";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => {
             <Route path="/orders" element={<Orders />} />
             <Route path="/refund" element={<Refunds />} />
             <Route path="/returns" element={<Returns />} />
+            <Route path="/card-payments" element={<StripePayments />} />
             <Route path="/support" element={<Support />} />
             <Route path="/settings" element={<Settings />} />
 
