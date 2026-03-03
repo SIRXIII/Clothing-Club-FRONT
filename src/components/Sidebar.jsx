@@ -9,8 +9,6 @@ import order from "../assets/SVG/order.svg";
 import orderwhite from "../assets/SVG/orderwhite.svg";
 import refund from "../assets/SVG/refund.svg";
 import refundwhite from "../assets/SVG/refundwhite.svg";
-import payout from "../assets/SVG/payout.svg";
-import payoutwhite from "../assets/SVG/payoutwhite.svg";
 import support from "../assets/SVG/support.svg";
 import supportwhite from "../assets/SVG/supportwhite.svg";
 import setting from "../assets/SVG/setting.svg";
@@ -43,12 +41,6 @@ const navLinks = [
         iconActive: refundwhite,
         label: "Returns",
         link: "/returns",
-      },
-      {
-        icon: payout,
-        iconActive: payoutwhite,
-        label: "Card payments",
-        link: "/card-payments",
       },
     ],
   },
