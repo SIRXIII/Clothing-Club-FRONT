@@ -24,7 +24,6 @@ import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import ViewProduct from "./pages/Products/ViewProduct/ViewProduct";
 import AddProduct from "./pages/Products/AddProduct";
 import Returns from "./pages/Returns/Returns";
-import ProductReturnDetail from "./pages/Returns/ProductReturnDetail";
 
 const queryClient = new QueryClient();
 
@@ -64,10 +63,6 @@ const App = () => {
             <Route
               path="/refund/refundsdetail/:id"
               element={<RefundsDetail />}
-            />
-            <Route
-              path="/refund/Returnsdetail/:id"
-              element={<ProductReturnDetail />}
             />
 
             <Route path="/support/chatsupport/:id" element={<ChatSupport />} />
