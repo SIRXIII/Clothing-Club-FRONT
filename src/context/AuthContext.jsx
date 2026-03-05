@@ -663,10 +663,26 @@ export const AuthProvider = ({ children }) => {
     API.defaults.headers.Authorization = `Bearer ${token}`;
   };
 
+  /** Refetch current user from API (e.g. after Stripe return). */
+  const fetchUser = async () => {
+    if (!token) return;
+    try {
+      const res = await API.get("/user");
+      const nextUser = res.data?.data ?? res.data;
+      if (nextUser) {
+        setUser(nextUser);
+        localStorage.setItem("auth_user", JSON.stringify(nextUser));
+      }
+    } catch (err) {
+      console.error("Failed to refetch user:", err);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         token,
         notifications,
         login,
@@ -680,6 +696,7 @@ export const AuthProvider = ({ children }) => {
         loginWithShopify,
         handleOAuthCallback,
         setAuthFromExternal,
+        fetchUser,
         markAsRead,
         markAllAsRead,
         isAuthenticated,

@@ -23,6 +23,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import ViewProduct from "./pages/Products/ViewProduct/ViewProduct";
 import AddProduct from "./pages/Products/AddProduct";
+import RequireStripeConnect from "./components/RequireStripeConnect";
 import Returns from "./pages/Returns/Returns";
 import ProductReturnDetail from "./pages/Returns/ProductReturnDetail";
 
@@ -57,8 +58,8 @@ const App = () => {
             <Route path="/orders/ordersdetail/:id" element={<OrdersDetail />} />
             <Route path="/orders/assignrider/:id" element={<AssignRider />} />
 
-            <Route path="/products/addproduct" element={<AddProduct />} />
-            <Route path="/products/editproduct/:id" element={<EditProduct />} />
+            <Route path="/products/addproduct" element={<RequireStripeConnect><AddProduct /></RequireStripeConnect>} />
+            <Route path="/products/editproduct/:id" element={<RequireStripeConnect><EditProduct /></RequireStripeConnect>} />
             <Route path="/products/viewproduct/:id" element={<ViewProduct />} />
 
             <Route

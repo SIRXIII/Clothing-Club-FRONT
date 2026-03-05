@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import SettingSidebar from "./SettingSidebar";
 import PersonalInfo from "./PersonalInfo";
 import Password from "./Password";
 import TwoFA from "./2FA";
+import PaymentsSetup from "./PaymentsSetup";
+import { useAuth } from "../../context/AuthContext";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { fetchUser } = useAuth();
+
+  useEffect(() => {
+    const stripe = searchParams.get("stripe");
+    if (stripe === "return" || stripe === "refresh") {
+      fetchUser?.();
+      setSearchParams({}, { replace: true });
+      setActiveTab("payments");
+    }
+  }, [searchParams, fetchUser, setSearchParams]);
 
   return (
     <div className="flex flex-col p-4 gap-4">
@@ -36,6 +50,7 @@ const Settings = () => {
           {activeTab === "personal" && <PersonalInfo />}
           {activeTab === "password" && <Password />}
           {activeTab === "2fa" && <TwoFA />}
+          {activeTab === "payments" && <PaymentsSetup />}
         </div>
       </div>
     </div>

@@ -7,11 +7,18 @@ import passwordwhite from "../../assets/SVG/passwordwhite.svg";
 import FA from "../../assets/SVG/FA.svg";
 import FAwhite from "../../assets/SVG/FAwhite.svg";
 
+const paymentIcon = (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+  </svg>
+);
+
 const SettingSidebar = ({ activeTab, setActiveTab }) => {
   const tabs = [
     { id: "personal", label: "Personal Information", icon: pro, iconActive: prowhite },
     { id: "password", label: "Password", icon: password, iconActive: passwordwhite },
     { id: "2fa", label: "2FA Verification", icon: FA, iconActive: FAwhite },
+    { id: "payments", label: "Payments Setup", icon: null, iconActive: null },
   ];
 
   return (
@@ -27,11 +34,15 @@ const SettingSidebar = ({ activeTab, setActiveTab }) => {
           }`}
         >
           <div className="flex items-center gap-3">
-            <img
-              src={activeTab === tab.id ? tab.iconActive : tab.icon}
-              alt={tab.label}
-              className="w-4 h-4"
-            />
+            {tab.icon ? (
+              <img
+                src={activeTab === tab.id ? tab.iconActive : tab.icon}
+                alt={tab.label}
+                className="w-4 h-4"
+              />
+            ) : (
+              <span className="w-4 h-4 flex items-center justify-center">{paymentIcon}</span>
+            )}
             <span>{tab.label}</span>
           </div>
           <FiChevronRight className="w-4 h-4" />

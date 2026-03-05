@@ -12,6 +12,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import productImg from "../../assets/Images/Pro_img.jpg";
 import { toast } from "react-toastify";
 import ConfirmDialog from "../../components/Dialogs/ConfirmDialog";
+import { useAuth } from "../../context/AuthContext";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -26,6 +27,8 @@ const Products = () => {
   const [deleteId, setDeleteId] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const stripeConnected = user?.stripe_connected === true;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -163,10 +166,15 @@ const Products = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 relative w-full justify-end">
-            {/* Add Product Button */}
+            {/* Add Product Button: when not Stripe-connected, still goes to addproduct to show connect guard */}
             <button
-              className="flex items-center justify-center border border-[#F77F00] bg-[#F77F00] rounded-lg px-3 py-2 text-sm text-white gap-2 w-full sm:w-auto"
+              className={`flex items-center justify-center border rounded-lg px-3 py-2 text-sm gap-2 w-full sm:w-auto ${
+                stripeConnected
+                  ? "border-[#F77F00] bg-[#F77F00] text-white"
+                  : "border-[#D9D9D9] bg-[#F5F5F5] text-[#6C6C6C] cursor-not-allowed"
+              }`}
               onClick={() => navigate("/products/addproduct")}
+              title={!stripeConnected ? "Connect Stripe in Settings to add products" : "Add Product"}
             >
               + Add Product
             </button>
