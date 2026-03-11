@@ -47,7 +47,6 @@ const ChatSupport = () => {
   }, [ticket]);
 
 
-  console.log("tickets", ticket);
   const safeDate = (val) => {
     if (!val) return new Date(0);
     return new Date(val.replace(" ", "T"));

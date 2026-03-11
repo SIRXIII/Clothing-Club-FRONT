@@ -43,31 +43,6 @@ const Login = () => {
     // Option 1: Direct redirect (current approach)
     window.location.href = `${API_URL}/social/google/redirect`;
     
-    // Option 2: Popup approach (uncomment if you prefer popup)
-    // const popup = window.open(
-    //   `${API_URL}/social/google/redirect`,
-    //   'google-oauth',
-    //   'width=500,height=600,scrollbars=yes,resizable=yes'
-    // );
-    
-    // const handleMessage = (event) => {
-    //   if (event.origin !== new URL(API_URL).origin) return;
-    //   
-    //   if (event.data.type === 'OAUTH_SUCCESS') {
-    //     localStorage.setItem('auth_token', event.data.token);
-    //     localStorage.setItem('auth_user', JSON.stringify(event.data.user));
-    //     localStorage.setItem('type', event.data.user.type || 'admin');
-    //     window.location.href = '/';
-    //   } else if (event.data.type === 'OAUTH_ERROR') {
-    //     setError(event.data.error);
-    //   }
-    //   
-    //   setOauthLoading(null);
-    //   window.removeEventListener('message', handleMessage);
-    //   popup.close();
-    // };
-    
-    // window.addEventListener('message', handleMessage);
   };
 
   const handleAppleLogin = () => {
@@ -152,8 +127,6 @@ const Login = () => {
             Let’s get back to your business!
           </p>
           <form className="space-y-3" onSubmit={handleSubmit}>
-            {/* <form className="space-y-3"> */}
-
             {error && Object.keys(fieldErrors).length === 0 && (
               <div className="p-4 mb-4 text-smrounded-lg bg-red-500/60 text-white" role="alert">
                 <span className="font-medium ">{error}</span> 
@@ -308,12 +281,6 @@ const Login = () => {
             </div>
           </div>
 
-          <p className="text-center text-base font-inter text-gray-600 mt-6">
-            {/* Don’t have an account?{" "}
-            <Link to="/signup" className="text-[#F77F00] fw6 ">
-              Sign up
-            </Link> */}
-          </p>
         </div>
       </div>
     </div>

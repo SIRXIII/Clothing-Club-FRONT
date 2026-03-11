@@ -97,8 +97,6 @@ const AssignRider = () => {
       return;
     }
 
-    console.log("Assigning rider:", selected, "to order:", id);
-
     try {
       await API.post("/orders/assign-rider", {
         order_id: id,

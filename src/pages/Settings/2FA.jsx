@@ -45,7 +45,6 @@ const TwoFA = () => {
       setRecoveryCode(res.data.recovery_codes);
       localStorage.setItem("auth_user", JSON.stringify(data.user));
     } catch (error) {
-      console.log("error", error);
       toast.error("Failed to generate TOTP QR code");
     }
   };
@@ -63,7 +62,6 @@ const TwoFA = () => {
 
       toast.success("QR regenerated successfully!");
     } catch (error) {
-      console.log("error", error);
       toast.error("Invalid recovery code");
     }
   };

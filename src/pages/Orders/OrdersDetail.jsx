@@ -19,8 +19,6 @@ const OrdersDetail = () => {
   const [previewImage, setPreviewImage] = useState(null);
 
 
-  console.log("first order", order);
-
   const fetchOrder = async () => {
     try {
       const res = await getOrderById(id);
@@ -40,8 +38,6 @@ const OrdersDetail = () => {
     (addr) => addr?.type === "shipping"
   );
 
-  console.log("shipping address", shippingAddress);
-
   const billingAddress = order?.traveler?.addresses?.find(
     (addr) => addr?.type === "billing"
   );
@@ -56,13 +52,6 @@ const OrdersDetail = () => {
   return (
     <div className="flex flex-col p-2">
       <div className="flex flex-col gap-4">
-        {/* <div className="flex items-center text-xs gap-1 text-[#6C6C6C]">
-          <p>Dashboard</p>
-          <span className="mx-1 text-[#9A9A9A]">/</span>
-          <p>Orders </p>
-          <span className="mx-1 text-[#9A9A9A]">/</span>
-          <p className="text-[#F77F00]">Assign Order</p>
-        </div> */}
          <Breadcrumb
             items={[
               { label: "Dashboard", path: "/" },
@@ -263,9 +252,6 @@ const OrdersDetail = () => {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-[#232323]">
-                  
-                  {/* {order?.partner.address} */}
-
                    <a
                 href={
                   order?.partner?.latitude && order?.partner?.longitude
@@ -309,8 +295,6 @@ const OrdersDetail = () => {
                     </div>
                   </div>
                   <p className="mt-3 text-xs text-[#232323]">
-                    {/* {order?.rider.address} */}
-
                      <a
                 href={
                   order?.rider?.latitude && order?.rider?.longitude
@@ -344,7 +328,6 @@ const OrdersDetail = () => {
                   <h2 className="text-lg fw6 text-[#232323]">Shipping Address</h2>
                   <p className="fw5 text-sm text-[#232323]">{shippingAddress?.name}</p>
                   <p className="text-sm fw4 text-[#232323]">
-                    {/* {shippingAddress?.address} */}
                      <a
                 href={
                   shippingAddress.latitude && shippingAddress.longitude

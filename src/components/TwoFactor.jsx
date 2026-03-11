@@ -18,9 +18,6 @@ const TwoFactor = () => {
       navigate("/login");
     } else {
     
-      // if (Array.isArray(pending2FA.method)) {
-      //   setMethod(pending2FA.methods[0]);
-      // } else if (pending2FA.method) {
         setMethod(pending2FA.methods);
       
     }

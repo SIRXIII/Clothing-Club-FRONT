@@ -33,8 +33,6 @@ const Products = () => {
         setLoading(true);
         const { data } = await API.get("/products");
         setProducts(data.data || []);
-
-        console.log("products", data.data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch products");
