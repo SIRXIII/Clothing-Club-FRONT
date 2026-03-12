@@ -190,23 +190,6 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-  // const logout = async () => {
-  //   try {
-  //     await API.post("/logout");
-  //   } catch (error) {
-
-  //   } finally {
-  //     setToken(null);
-  //     setUser(null);
-  //     setPending2FA(null);
-  //     localStorage.removeItem("auth_token");
-  //     localStorage.removeItem("auth_user");
-  //     localStorage.removeItem("type");
-  //     delete API.defaults.headers.Authorization;
-  //     oauthService.cleanup();
-  //     navigate("/login");
-  //   }
-  // };
   const logout = async () => {
   // Prevent multiple concurrent logouts
   if (isLoggingOut) return;

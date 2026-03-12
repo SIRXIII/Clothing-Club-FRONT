@@ -8,8 +8,6 @@ const AlertPlane = () => {
 
   if (isLoading) return <p>Loading travelers...</p>
 
-  console.log("notificartions ", notifications);
-
   return (
     <div className="flex flex-col border-color rounded-lg p-6 gap-6">
       <h3 className="text-lg fw4 font-roboto gap-[214px]">Alerts Panel</h3>
@@ -28,11 +26,6 @@ const AlertPlane = () => {
                 </h6>
              
 
-              {/* <span
-                className={`px-3 py-1 text-xs rounded-md fw5 gap-2.5 ${item.statusColor} whitespace-nowrap`}
-              >
-                {item.status}
-              </span> */}
             </div>
              <div className="flex flex-col leading-[150%] fw5 tracking-[-3%] gap-3">
                   <p className="text-sm  text-[#232323] ">

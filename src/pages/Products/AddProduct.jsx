@@ -288,13 +288,6 @@ const AddProduct = () => {
     if (input) input.value = null;
   };
 
-  // const generateBarcode = () => {
-  //   const randomBarcode = Math.floor(
-  //     100000000000 + Math.random() * 900000000000
-  //   ).toString();
-  //   setProductData((prev) => ({ ...prev, barcode: randomBarcode }));
-  // };
-
   const generateBarcode = async () => {
     const randomBarcode = productData.barcode
 

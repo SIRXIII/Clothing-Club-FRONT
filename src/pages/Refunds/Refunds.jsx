@@ -130,15 +130,11 @@ const Refunds = () => {
 
 
   const handleSupportClick = async (orderId) => {
-
-    console.log("orderId", orderId);
   try {
     const res = await API.post("/support/check-or-create", {
       order_id: orderId,
     });
 
-
-    console.log("Support chat response:", res.data);
     if (res.data.status === "created") {
       toast.success("New support ticket created!");
     }

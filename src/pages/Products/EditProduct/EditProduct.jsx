@@ -219,7 +219,6 @@ const EditProduct = () => {
       toast.success("Product updated successfully!");
       navigate('/products', { replace: true });
     } catch {
-      // setError("Failed to update product.");
     } finally {
       setSaving(false);
     }

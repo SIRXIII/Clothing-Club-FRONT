@@ -26,7 +26,6 @@ export const useStatusUpdatePartner = () => {
   return useMutation({
     mutationFn: ({ id, status }) => statusUpdatePartner(id, status),
     onSuccess: () => {
-      // queryClient.invalidateQueries(["partners"]);
       queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
   });

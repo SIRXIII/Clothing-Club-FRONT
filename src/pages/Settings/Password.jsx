@@ -59,8 +59,6 @@ const Password = () => {
         handleDiscard();
       }
     } catch (err) {
-      console.log(err.response?.data || err);
-      
       toast.error("Something went wrong!")
     } finally {
       setLoading(false);

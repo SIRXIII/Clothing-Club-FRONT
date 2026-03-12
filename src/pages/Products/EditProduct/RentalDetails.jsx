@@ -3,7 +3,6 @@ import Dropdown from "../../../components/Dropdown";
 
 const RentalDetails = ({ productData, handleChange }) => {
   return (
-    // <form>
       <div className="flex flex-col bg-[#FFFFFF] border-color rounded-lg p-6 gap-6">
         <h3 className="fw6 text-lg leading-[150%] tracking-[-3%]">
           Rental Details
@@ -235,7 +234,6 @@ const RentalDetails = ({ productData, handleChange }) => {
           </div>
         </div>
       </div>
-    // </form>  
   );
 };
 

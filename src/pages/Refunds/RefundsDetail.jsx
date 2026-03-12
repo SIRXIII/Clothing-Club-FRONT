@@ -49,8 +49,6 @@ const RefundsDetail = () => {
     (addr) => addr?.type === "shipping"
   );
 
-  console.log("shipping address", shippingAddress);
-
   const billingAddress = refund?.traveler?.addresses?.find(
     (addr) => addr?.type === "billing"
   );
@@ -80,14 +78,11 @@ const RefundsDetail = () => {
 
 
    const handleSupportClick = async (orderId) => {
-
   try {
     const res = await API.post("/support/check-or-create", {
       order_id: orderId,
     });
 
-
-    console.log("Support chat response:", res.data);
     if (res.data.status === "created") {
       toast.success("New support ticket created!");
     }
@@ -147,12 +142,6 @@ const RefundsDetail = () => {
         <div className="flex flex-col bg-white p-6 gap-6 rounded-lg shadow-sm">
           <div className="flex justify-between">
             <h2 className="text-lg fw6 text-[#232323]">Customer</h2>
-            {/* <button
-              className="border border-[#F77F00] rounded-lg py-3 px-4 gap-2  text-xs bg-[#FEF2E6] text-[#F77F00] hover:bg-[#F77F00] hover:text-white"
-              onClick={navigate(`/support/chatsupport/${ticket.id}`)}
-            >
-              Chat Support
-            </button> */}
           </div>
 
           <div className="flex justify-between">
@@ -340,7 +329,6 @@ const RefundsDetail = () => {
                   </div>
                 </div>
                 <p className="w-[314px] text-xs text-[#232323]">
-                  {/* {partner?.address} */}
                   <a
                     href={
                       partner?.latitude && partner?.longitude
@@ -383,8 +371,6 @@ const RefundsDetail = () => {
                   </div>
                 </div>
                 <p className="w-[314px] text-xs text-[#232323]">
-                  {/* {rider?.address} */}
-
                   <a
                     href={
                       rider?.latitude && rider?.longitude
