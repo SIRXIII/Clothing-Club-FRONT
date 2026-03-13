@@ -36,7 +36,7 @@ const Dashboard = () => {
       {!stripeConnected && (
         <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-amber-800 text-sm font-medium">
-            Connect Stripe to receive payments. You need to complete Stripe setup before adding products.
+            Connect Stripe to receive payouts directly to your bank account. This is optional but recommended for getting paid seamlessly.
           </p>
           <button
             type="button"
