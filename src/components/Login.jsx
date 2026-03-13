@@ -52,19 +52,49 @@ const Login = () => {
 
   // OAuth handlers
   const handleGoogleLogin = () => {
-    // For now, force explicit signup instead of auto-creating via Google
-    toast.error("Please sign up first to use Google login.");
-    navigate("/signup");
+    setOauthLoading("google");
+    setError("");
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://travelclothingclub-partner.online/api";
+    window.location.href = `${API_URL}/social/google/redirect`;
   };
 
   const handleFacebookLogin = () => {
-    toast.error("Please sign up first to use Facebook login.");
-    navigate("/signup");
+    setOauthLoading("facebook");
+    setError("");
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://travelclothingclub-partner.online/api";
+    window.location.href = `${API_URL}/social/facebook/redirect`;
   };
 
   const handleShopifyLogin = () => {
-    toast.error("Please sign up first to connect Shopify.");
-    navigate("/signup");
+    setOauthLoading("shopify");
+    setError("");
+    const shopDomain = prompt(
+      "Enter your Shopify shop domain (e.g., mystore.myshopify.com):"
+    );
+    if (!shopDomain) {
+      setOauthLoading(null);
+      return;
+    }
+
+    const shopDomainRegex = /^[a-zA-Z0-9-]+\.myshopify\.com$/;
+    if (!shopDomainRegex.test(shopDomain)) {
+      setError(
+        "Invalid shop domain format. Please use format: mystore.myshopify.com"
+      );
+      setOauthLoading(null);
+      return;
+    }
+
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://travelclothingclub-partner.online/api";
+    window.location.href = `${API_URL}/social/shopify/redirect?shop=${encodeURIComponent(
+      shopDomain
+    )}`;
   };
 
   useEffect(() => {
