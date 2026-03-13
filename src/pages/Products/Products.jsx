@@ -166,15 +166,11 @@ const Products = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 relative w-full justify-end">
-            {/* Add Product Button: when not Stripe-connected, still goes to addproduct to show connect guard */}
+            {/* Add Product Button */}
             <button
-              className={`flex items-center justify-center border rounded-lg px-3 py-2 text-sm gap-2 w-full sm:w-auto ${
-                stripeConnected
-                  ? "border-[#F77F00] bg-[#F77F00] text-white"
-                  : "border-[#D9D9D9] bg-[#F5F5F5] text-[#6C6C6C] cursor-not-allowed"
-              }`}
+              className="flex items-center justify-center border rounded-lg px-3 py-2 text-sm gap-2 w-full sm:w-auto border-[#F77F00] bg-[#F77F00] text-white"
               onClick={() => navigate("/products/addproduct")}
-              title={!stripeConnected ? "Connect Stripe in Settings to add products" : "Add Product"}
+              title="Add Product"
             >
               + Add Product
             </button>

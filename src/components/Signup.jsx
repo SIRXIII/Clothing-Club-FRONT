@@ -3,11 +3,45 @@ import TCCImage from "../assets/Images/TCC_bg.jpg";
 import { FiEye } from "react-icons/fi";
 import logo from "../assets/SVG/logo.svg";
 import EyeOff from "../assets/SVG/password-hidden.svg";
+import google from "../assets/SVG/google.svg";
+import facebook from "../assets/SVG/facebook.svg";
+import shopify from "../assets/SVG/shopify.svg";
 import { Link } from "react-router-dom";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "https://travelclothingclub-partner.online/api";
+
+  const handleGoogleSignup = () => {
+    window.location.href = `${API_URL}/social/google/redirect`;
+  };
+
+  const handleFacebookSignup = () => {
+    window.location.href = `${API_URL}/social/facebook/redirect`;
+  };
+
+  const handleShopifySignup = () => {
+    const shopDomain = prompt(
+      "Enter your Shopify shop domain (e.g., mystore.myshopify.com):"
+    );
+    if (!shopDomain) return;
+
+    const shopDomainRegex = /^[a-zA-Z0-9-]+\.myshopify\.com$/;
+    if (!shopDomainRegex.test(shopDomain)) {
+      alert(
+        "Invalid shop domain format. Please use format: mystore.myshopify.com"
+      );
+      return;
+    }
+
+    window.location.href = `${API_URL}/social/shopify/redirect?shop=${encodeURIComponent(
+      shopDomain
+    )}`;
+  };
 
   return (
     <div
@@ -154,6 +188,41 @@ const Signup = () => {
               Sign up
             </button>
           </form>
+
+          <div className="flex items-center my-4 py-0.5 px-1">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-2 text-gray-500 text-xs ">
+              or sign up with
+            </span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
+
+          <div className="space-y-3">
+            <button
+              onClick={handleGoogleSignup}
+              className="w-full border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-all"
+            >
+              <img src={google} alt="" />
+              <span className="text-base fw6">Sign up with Google</span>
+            </button>
+
+            <div className="flex flex-col md:flex-row gap-y-3 space-x-4">
+              <button
+                onClick={handleFacebookSignup}
+                className="w-full md:w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-all"
+              >
+                <img src={facebook} alt="" />
+                <span className="text-base fw6">Sign up with Facebook</span>
+              </button>
+              <button
+                onClick={handleShopifySignup}
+                className="w-full md:w-1/2 border border-[#D9D9D9] py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-gray-50 transition-all"
+              >
+                <img src={shopify} alt="" />
+                <span className="text-base fw6">Sign up with Shopify</span>
+              </button>
+            </div>
+          </div>
 
           <p className="text-center text-base font-inter text-gray-600 mt-6">
             If you have an account?{" "}

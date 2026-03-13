@@ -14,10 +14,6 @@ const Dashboard = () => {
   const stripeConnected = user?.stripe_connected === true;
 
   const handleAddProduct = () => {
-    if (!stripeConnected) {
-      navigate("/products/addproduct");
-      return;
-    }
     navigate("/products/addproduct");
   };
 
@@ -26,13 +22,17 @@ const Dashboard = () => {
       const { url } = await getStripeConnectUrl();
       if (url) window.location.href = url;
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || "Failed to open Stripe setup");
+      toast.error(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to open Stripe setup"
+      );
     }
   };
 
   return (
     <div className="flex flex-col gap-6 sm:p-0 md:p-8 w-full">
-      {/* Stripe Connect banner when not connected */}
+      {/* Stripe Connect banner when not connected (optional information only) */}
       {!stripeConnected && (
         <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-amber-800 text-sm font-medium">

@@ -6,12 +6,14 @@ import facebook from "../assets/SVG/facebook.svg";
 import shopify from "../assets/SVG/shopify.svg";
 import google from "../assets/SVG/google.svg";
 import EyeOff from "../assets/SVG/password-hidden.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { handleApiError } from "../utils/toastHelper";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [email, setEmail] = useState("");
@@ -21,6 +23,15 @@ const Login = () => {
   const [oauthLoading, setOauthLoading] = useState(null);
   const { login } = useAuth();
 
+  // Show toast when redirected with ?error= (e.g. OAuth "Please sign up first")
+  useEffect(() => {
+    const errorFromUrl = searchParams.get("error");
+    if (errorFromUrl) {
+      toast.error(decodeURIComponent(errorFromUrl));
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,92 +40,31 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (err) {
-      setError(err.message);
-      setFieldErrors(err.errors);
-      // Also show toast notifications for better UX
-      handleApiError(err, setFieldErrors);
+      setError(err.message || "Login failed");
+      setFieldErrors(err.errors || {});
+      if (err.message === "Please sign up first.") {
+        toast.error("Please sign up first.");
+      } else {
+        handleApiError(err, setFieldErrors);
+      }
     }
   };
 
   // OAuth handlers
   const handleGoogleLogin = () => {
-    setOauthLoading('google');
-    setError("");
-    
-    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
-    
-    // Option 1: Direct redirect (current approach)
-    window.location.href = `${API_URL}/social/google/redirect`;
-    
-    // Option 2: Popup approach (uncomment if you prefer popup)
-    // const popup = window.open(
-    //   `${API_URL}/social/google/redirect`,
-    //   'google-oauth',
-    //   'width=500,height=600,scrollbars=yes,resizable=yes'
-    // );
-    
-    // const handleMessage = (event) => {
-    //   if (event.origin !== new URL(API_URL).origin) return;
-    //   
-    //   if (event.data.type === 'OAUTH_SUCCESS') {
-    //     localStorage.setItem('auth_token', event.data.token);
-    //     localStorage.setItem('auth_user', JSON.stringify(event.data.user));
-    //     localStorage.setItem('type', event.data.user.type || 'admin');
-    //     window.location.href = '/';
-    //   } else if (event.data.type === 'OAUTH_ERROR') {
-    //     setError(event.data.error);
-    //   }
-    //   
-    //   setOauthLoading(null);
-    //   window.removeEventListener('message', handleMessage);
-    //   popup.close();
-    // };
-    
-    // window.addEventListener('message', handleMessage);
+    // For now, force explicit signup instead of auto-creating via Google
+    toast.error("Please sign up first to use Google login.");
+    navigate("/signup");
   };
 
   const handleFacebookLogin = () => {
-    setOauthLoading('facebook');
-    setError("");
-    
-    // Direct redirect to backend OAuth endpoint
-    const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
-    window.location.href = `${API_URL}/social/facebook/redirect`;
+    toast.error("Please sign up first to use Facebook login.");
+    navigate("/signup");
   };
 
-  const handleShopifyLogin = async () => {
-    try {
-      setOauthLoading('shopify');
-      setError("");
-      
-      const shopDomain = prompt('Enter your Shopify shop domain (e.g., mystore.myshopify.com):');
-      if (!shopDomain) {
-        setOauthLoading(null);
-        return;
-      }
-      
-      // Validate shop domain format
-      const shopDomainRegex = /^[a-zA-Z0-9-]+\.myshopify\.com$/;
-      if (!shopDomainRegex.test(shopDomain)) {
-        setError('Invalid shop domain format. Please use format: mystore.myshopify.com');
-        setOauthLoading(null);
-        return;
-      }
-      
-      // Use oauthService for consistency
-      const oauthService = (await import('../services/oauthService')).default;
-      
-      // Store shop domain for the service
-      sessionStorage.setItem('shopify_domain', shopDomain);
-      
-      // Direct redirect to backend OAuth endpoint
-      const API_URL = import.meta.env.VITE_API_URL || 'https://travelclothingclub-partner.online/api';
-      window.location.href = `${API_URL}/social/shopify/redirect?shop=${encodeURIComponent(shopDomain)}`;
-      
-    } catch (error) {
-      setError(error.message || 'Failed to initiate Shopify login');
-      setOauthLoading(null);
-    }
+  const handleShopifyLogin = () => {
+    toast.error("Please sign up first to connect Shopify.");
+    navigate("/signup");
   };
 
   useEffect(() => {
@@ -322,10 +272,10 @@ const Login = () => {
           </div>
 
           <p className="text-center text-base font-inter text-gray-600 mt-6">
-            {/* Don’t have an account?{" "}
+            Don’t have an account?{" "}
             <Link to="/signup" className="text-[#F77F00] fw6 ">
               Sign up
-            </Link> */}
+            </Link>
           </p>
         </div>
       </div>
