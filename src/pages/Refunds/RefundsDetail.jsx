@@ -13,7 +13,6 @@ import Breadcrumb from "../../components/Breadcrumb";
 import API from "../../services/api";
 
 
-const GEOAPIFY_KEY = import.meta.env.VITE_APP_GEOAPIFY_KEY;
 
 
 const RefundsDetail = () => {
@@ -333,7 +332,7 @@ const RefundsDetail = () => {
                     href={
                       partner?.latitude && partner?.longitude
                         ? `https://www.google.com/maps?q=${partner?.latitude},${partner?.longitude}`
-                        : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(partner?.address)}`
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partner?.address)}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -375,7 +374,7 @@ const RefundsDetail = () => {
                     href={
                       rider?.latitude && rider?.longitude
                         ? `https://www.google.com/maps?q=${rider?.latitude},${rider?.longitude}`
-                        : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(rider?.address)}`
+                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(rider?.address)}`
                     }
                     target="_blank"
                     rel="noopener noreferrer"
@@ -412,7 +411,7 @@ const RefundsDetail = () => {
                       href={
                         shippingAddress.latitude && shippingAddress.longitude
                           ? `https://www.google.com/maps?q=${shippingAddress.latitude},${shippingAddress.longitude}`
-                          : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(shippingAddress.address)}`
+                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress.address)}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
@@ -435,7 +434,7 @@ const RefundsDetail = () => {
                       href={
                         billingAddress.latitude && billingAddress.longitude
                           ? `https://www.google.com/maps?q=${billingAddress.latitude},${billingAddress.longitude}`
-                          : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(billingAddress.address)}`
+                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(billingAddress.address)}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"

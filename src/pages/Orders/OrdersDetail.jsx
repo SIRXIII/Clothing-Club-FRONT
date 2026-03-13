@@ -9,7 +9,6 @@ import DefaultProfile from "../../assets/Images/trv_profile.jpg";
 import ImagePreviewGallery from "../../components/ImagePreviewGallery";
 import Breadcrumb from "../../components/Breadcrumb";
 
-const GEOAPIFY_KEY = import.meta.env.VITE_APP_GEOAPIFY_KEY;
 
 
 const OrdersDetail = () => {
@@ -256,7 +255,7 @@ const OrdersDetail = () => {
                 href={
                   order?.partner?.latitude && order?.partner?.longitude
                     ? `https://www.google.com/maps?q=${order?.partner?.latitude},${order?.partner?.longitude}`
-                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(order?.partner.address)}`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order?.partner.address)}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
@@ -299,7 +298,7 @@ const OrdersDetail = () => {
                 href={
                   order?.rider?.latitude && order?.rider?.longitude
                     ? `https://www.google.com/maps?q=${order?.rider?.latitude},${order?.rider?.longitude}`
-                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(order?.rider.address)}`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order?.rider.address)}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
@@ -332,7 +331,7 @@ const OrdersDetail = () => {
                 href={
                   shippingAddress.latitude && shippingAddress.longitude
                     ? `https://www.google.com/maps?q=${shippingAddress.latitude},${shippingAddress.longitude}`
-                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(shippingAddress.address)}`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shippingAddress.address)}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
@@ -355,7 +354,7 @@ const OrdersDetail = () => {
                 href={
                   billingAddress.latitude && billingAddress.longitude
                     ? `https://www.google.com/maps?q=${billingAddress.latitude},${billingAddress.longitude}`
-                    : `https://www.google.com/maps/search/?api=${GEOAPIFY_KEY}&query=${encodeURIComponent(billingAddress.address)}`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(billingAddress.address)}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
