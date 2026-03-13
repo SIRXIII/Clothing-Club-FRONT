@@ -18,11 +18,13 @@ import TwoFactor from "./components/TwoFactor";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import AddProduct from "./pages/Products/AddProduct";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
+    <ErrorBoundary>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <Routes>
@@ -60,6 +62,7 @@ const App = () => {
         </Routes>
       </QueryClientProvider>
     </AuthProvider>
+    </ErrorBoundary>
   );
 };
 
